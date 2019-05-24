@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>learning style checker</title>
+    <link rel="stylesheet" href="dist/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Noto+Sans+JP:400,700|Sigmar+One&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <section id="appCheck">
+      <div class="container container--appCheck">
+        <div v-bind:is="currentPage" v-on:start-check="moveCheck" v-on:finish-check="moveResult" v-on:retry-check="moveStart"></div>
+      </div>
+      <!-- container end -->
+    </section>
+
+    <script src="dist/js/bundle.js"></script>
+  </body>
+</html>
