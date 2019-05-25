@@ -162,9 +162,9 @@ Vue.component("checklist", {
   </transition-group>
   </ul>
   <div class="btn-group">
-    <button class="btn btn--accent" v-on:click="addPoint(5)">いつもそうだ</button>
-    <button class="btn btn--middle" v-on:click="addPoint(3)">時々そうだ</button>
-    <button class="btn btn--main" v-on:click="addPoint(1)">めったにない</button>
+    <button class="btn btn--accent" v-on:click="addPoint(5)">いつも<br>そうだ</button>
+    <button class="btn btn--middle" v-on:click="addPoint(3)">時々<br>そうだ</button>
+    <button class="btn btn--main" v-on:click="addPoint(1)">めったに<br>ない</button>
   </div>
 </div>
   `

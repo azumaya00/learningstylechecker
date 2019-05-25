@@ -10,17 +10,115 @@
       href="https://fonts.googleapis.com/css?family=Noto+Sans+JP:400,700|Sigmar+One&display=swap"
       rel="stylesheet"
     />
-  </head>
-  <body>
-    <section id="appCheck">
-      <div class="container container--appCheck">
-        <transition mode="out-in">
-        <div v-bind:is="currentPage" v-bind:score="score" v-on:start-check="moveCheck" v-on:finish-check="moveResult" v-on:retry-check="moveStart"></div>
-      </transition>
-      </div>
-      <!-- container end -->
-    </section>
 
+    <!-- FB用ここから -->
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="ゆるナレッジfromマレーシア" />
+    <meta
+      property="og:title"
+      content="Learning style checker｜ゆるナレッジfromマレーシア"
+    />
+    <meta property="og:url" content="https://learntypecheck.yuruknowledge.com/" />
+    <meta
+      property="og:description"
+      content="あなたの学習スタイルはどのタイプ？質問に答えるだけで簡単にチェックできます！"
+    />
+    <meta
+      property="og:image"
+      content="https://learntypecheck.yuruknowledge.com/dist/img/shareimg.jpg"
+    />
+    <!-- FB用ここまで -->
+
+    <!-- twitter用ここから -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="“@saika00”" />
+    <meta
+      name="twitter:title"
+      content="Learning style checker｜ゆるナレッジfromマレーシア"
+    />
+    <meta
+      name="twitter:description"
+      content="あなたの学習スタイルはどのタイプ？質問に答えるだけで簡単にチェックできます！"
+    />
+    <meta
+      name="twitter:image"
+      content="https://learntypecheck.yuruknowledge.com/dist/img/shareimg.jpg"
+    />
+    <!-- twitter用ここまで -->
+  </head>
+
+  <body>
+    <!-- FB用SDKここから -->
+    <div id="fb-root"></div>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.3&appId=116977691726957&autoLogAppEvents=1"
+    ></script>
+    <!-- FB用SDKここまで -->
+
+    <div class="wrapper">
+      <header></header>
+
+      <section id="appCheck">
+        <div class="container container--appCheck">
+          <transition mode="out-in">
+            <div
+              v-bind:is="currentPage"
+              v-bind:score="score"
+              v-on:start-check="moveCheck"
+              v-on:finish-check="moveResult"
+              v-on:retry-check="moveStart"
+            ></div>
+          </transition>
+        </div>
+        <!-- container end -->
+      </section>
+
+      <section id="share">
+        <div class="container container--share">
+          <p>気に入ったらシェアしてね！</p>
+          <div class="btn-group--sns">
+            <!-- twitterボタン -->
+            <a
+              href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+              class="twitter-share-button"
+              data-show-count="false"
+              >Tweet</a
+            ><script
+              async
+              src="https://platform.twitter.com/widgets.js"
+              charset="utf-8"
+            ></script>
+            <!-- FBボタン -->
+            <div
+              class="fb-share-button"
+              data-href="https://learntypecheck.yuruknowledge.com/"
+              data-layout="button"
+              data-size="small"
+            >
+              <a
+                target="_blank"
+                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearntypecheck.yuruknowledge.com%2F&amp;src=sdkpreparse"
+                class="fb-xfbml-parse-ignore"
+                >シェア</a
+              >
+            </div>
+          </div>
+        </div>
+        <!-- container end -->
+      </section>
+
+      <footer>
+        <p>
+          &copy;Copyright2019
+          <a href="https://yuruknowledge.com/">ゆるナレッジfromマレーシア</a
+          >.All Rights Reserved
+        </p>
+      </footer>
+    </div>
     <script src="dist/js/bundle.js"></script>
   </body>
 </html>
