@@ -98,7 +98,7 @@ Vue.component("checklist", {
         },
         {
           id: 22,
-          text: "誰かとひっついたり何かを触ったりすると落ち着く"
+          text: "誰かとひっついたり<br>何かを触ったりすると落ち着く"
         },
         {
           id: 23,
@@ -145,18 +145,22 @@ Vue.component("checklist", {
         this.currentQuestion++;
       } else if (this.currentQuestion === 24) {
         this.score[2].val += point;
+        //親にscoreを渡す
         this.$emit("finish-check", this.score);
       }
     }
   },
   template: `
   <div class="checklist">
-  <ul><li v-for="(question,index) in filteredItems" v-bind:key="question.id">
+  <ul>
+  <transition-group appear mode="in-out" name="question" tag="ul"><li v-for="(question,index) in filteredItems" v-bind:key="question.id">
   <h1>Q{{question.id}}.</h1>
   <div class="question">
     <p v-html="question.text"></p>
   </div>
-  </li></ul>
+  </li>
+  </transition-group>
+  </ul>
   <div class="btn-group">
     <button class="btn btn--accent" v-on:click="addPoint(5)">いつもそうだ</button>
     <button class="btn btn--middle" v-on:click="addPoint(3)">時々そうだ</button>
@@ -171,11 +175,6 @@ Vue.component("result", {
   data: function() {
     return {
       selectedType: "all",
-      score: [
-        { type: "visual", val: 0 },
-        { type: "auditory", val: 0 },
-        { type: "tactile", val: 0 }
-      ],
       results: [
         {
           id: "v",
@@ -222,10 +221,56 @@ Vue.component("result", {
       ]
     };
   },
+  props: {
+    score: Array
+  },
   computed: {
     //当てはまる結果を表示
     filteredResults() {
       return this.searchResult(this.results, this.selectedType);
+    }
+  },
+  created() {
+    //結果の判定
+    //変数定義
+    var vision = this.score[0].val;
+    var auditory = this.score[1].val;
+    var tactile = this.score[2].val;
+    //ある値が他の物より5以上多いときは単独タイプ
+    if (vision >= auditory + 5 && vision >= tactile + 5) {
+      this.selectedType = "v";
+    } else if (auditory >= vision + 5 && auditory >= tactile + 5) {
+      this.selectedType = "a";
+    } else if (tactile >= vision + 5 && tactile >= auditory + 5) {
+      this.selectedType = "t";
+      //2つの要素が残り一つより5以上多く、2つの差が5未満の時は複合タイプ
+    } else if (
+      vision >= tactile + 5 &&
+      auditory >= tactile + 5 &&
+      Math.abs(vision - auditory) < 5
+    ) {
+      this.selectedType = "va";
+    } else if (
+      vision >= auditory + 5 &&
+      tactile >= auditory + 5 &&
+      Math.abs(vision - tactile) < 5
+    ) {
+      this.selectedType = "vt";
+    } else if (
+      tactile >= vision + 5 &&
+      auditory >= vision + 5 &&
+      Math.abs(tactile - auditory) < 5
+    ) {
+      this.selectedType = "at";
+      //全ての差が5未満の時は全部盛りタイプ
+    } else if (
+      Math.abs(vision - auditory) < 5 &&
+      Math.abs(tactile - vision) < 5 &&
+      Math.abs(tactile - auditory) < 5
+    ) {
+      this.selectedType = "all";
+    } else {
+      console.log("式がおかしいよ！");
     }
   },
   methods: {
@@ -281,16 +326,21 @@ Vue.component("result", {
 new Vue({
   el: "#appCheck",
   data: {
-    currentPage: "start"
+    currentPage: "start",
+    score: []
   },
   computed: {},
   methods: {
+    //スタートで質問画面へ
     moveCheck() {
       this.currentPage = "checklist";
     },
-    moveResult() {
+    //質問画面からscore貰って結果画面へ
+    moveResult(score) {
+      this.score = score;
       this.currentPage = "result";
     },
+    //リトライでスタート画面へ
     moveStart() {
       this.currentPage = "start";
     }

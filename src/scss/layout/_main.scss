@@ -66,6 +66,53 @@ button
 }
 
 /* ---------------------------------
+animation
+--------------------------------- */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s;
+}
+
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
+
+.v-enter-to,
+.v-leave {
+  opacity: 1;
+}
+
+//質問項目用
+.question-enter-active {
+  transition: opacity 0.5s, transform 1s;
+  
+}
+
+.question-leave-active {
+  transition: opacity 0.3s, transform .5s;
+  position: absolute;
+}
+
+.question-enter {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.question-leave-to {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.question-enter-to {
+  opacity: 1;
+}
+
+.question-leave {
+  opacity: 1;
+}
+
+/* ---------------------------------
 start
 --------------------------------- */
 
@@ -93,14 +140,20 @@ checklist
   height: 100%;
   padding-top: 7%;
   position: relative;
+  ul{
+    width: 85%;
+    margin: 0 auto;
+    position: relative;
+  }
   h1 {
+    position: relative;
     margin-bottom: 4%;
-    margin-left: 12%;
   }
   .question {
-    width: 70%;
+    width: 90%;
     height: 100px;
-    margin: 0 auto 9%;
+    position: relative;
+    margin: 0 auto 15%;
     p {
       font-size: $font-size_2l;
     }
