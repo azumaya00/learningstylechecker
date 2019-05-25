@@ -14,7 +14,9 @@
   <body>
     <section id="appCheck">
       <div class="container container--appCheck">
-        <div v-bind:is="currentPage" v-on:start-check="moveCheck" v-on:finish-check="moveResult" v-on:retry-check="moveStart"></div>
+        <transition mode="out-in">
+        <div v-bind:is="currentPage" v-bind:score="score" v-on:start-check="moveCheck" v-on:finish-check="moveResult" v-on:retry-check="moveStart"></div>
+      </transition>
       </div>
       <!-- container end -->
     </section>
