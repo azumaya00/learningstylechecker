@@ -1,0 +1,56 @@
+/* ---------------------------------
+valiables
+--------------------------------- */
+
+   $site-width: 1024px;
+
+   $color_dark087: rgba(0,0,0,0.87);
+   $color_dark054: rgba(0,0,0,0.54);
+   $color_dark026: rgba(0,0,0,0.26);
+   $color_dark012: rgba(0,0,0,0.12);
+   
+   $color_light100: rgba(255,255,255,1.00);
+   $color_light070: rgba(255,255,255,0.70);
+   $color_light030: rgba(255,255,255,0.30);
+   $color_light012: rgba(255,255,255,0.12);
+   
+   $color_main: #69c4d0;
+   $color_accent: #c14f7e;
+   $color_middle: #9E7E9F;
+   $color_base:  #f8f5de;
+   
+   $font-color_default: #403734;
+   $font-color_inverted: $color_light100;
+   $font-color_link: #403734;
+   
+   $font-size_s: 12px;
+   $font-size_m: 14px;
+   $font-size_l: 16px;
+   $font-size_xl: 18px;
+   $font-size_2l: 24px;
+   $font-size_3l: 44px;
+   $font-size_4l: 60px;
+   
+   $space_s: 5px;
+   $space_m: 10px;
+   $space_l: 15px;
+   $space_xl: 20px;
+   $space_2l: 25px;
+   $space_3l: 30px;
+   $space_4l: 40px;
+   $space_5l: 50px;
+   $space_6l: 60px;
+   $space_7l: 70px;
+   $space_8l: 80px;
+   
+   $font-family_default: 'Noto Sans JP', sans-serif;
+   $font-family_accent: 'Sigmar One', cursive;
+   
+   $breakpoints: (
+     'xs': 'screen and (max-width: 320px)',
+     'sm': 'screen and (max-width: 600px)',
+     'md': 'screen and (max-width: 768px)',
+     'lg': 'screen and (max-width: 1024px)',
+     'xl': 'screen and (max-width: 1180px)',
+   ) !default;
+   

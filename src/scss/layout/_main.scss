@@ -1,0 +1,179 @@
+/* ---------------------------------
+common
+--------------------------------- */
+
+#appCheck {
+  width: 100%;
+  margin-top: $space_5l;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  margin: 0 auto;
+  background: url(../../../dist/img/bgimage.jpg) no-repeat;
+  background-size: contain;
+  background-position: top center;
+}
+
+/* ---------------------------------
+button
+--------------------------------- */
+.btn {
+  display: block;
+  padding: $space_m $space_2l;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-size: $font-size_xl;
+  box-shadow: 3px 3px 6px $color_dark026;
+  cursor: pointer;
+  transition: all 0.3s;
+  &:hover {
+    transition: all 0.3s;
+  }
+  &--large {
+    padding: $space_s $space_2l;
+    font-size: $font-size_2l;
+  }
+  &--main {
+    background: $color_main;
+    border: 2px solid $color_main;
+    color: $font-color_inverted;
+    &:hover {
+      background: $color_light070;
+      color: $color_main;
+    }
+  }
+  &--middle {
+    background: $color_middle;
+    border: 2px solid $color_middle;
+    color: $font-color_inverted;
+    &:hover {
+      background: $color_light070;
+      color: $color_middle;
+    }
+  }
+  &--accent {
+    background: $color_accent;
+    border: 2px solid $color_accent;
+    color: $font-color_inverted;
+    &:hover {
+      background: $color_light070;
+      color: $color_accent;
+    }
+  }
+}
+
+/* ---------------------------------
+start
+--------------------------------- */
+
+.start {
+  padding-top: 8%;
+  h1 {
+    margin-bottom: 4%;
+    text-align: center;
+  }
+  p {
+    margin-bottom: 8%;
+    font-size: $font-size_2l;
+    text-align: center;
+  }
+  .btn {
+    margin: 0 auto;
+  }
+}
+
+/* ---------------------------------
+checklist
+--------------------------------- */
+
+.checklist {
+  height: 100%;
+  padding-top: 7%;
+  position: relative;
+  h1 {
+    margin-bottom: 4%;
+    margin-left: 12%;
+  }
+  .question {
+    width: 70%;
+    height: 100px;
+    margin: 0 auto 9%;
+    p {
+      font-size: $font-size_2l;
+    }
+  }
+  .btn-group {
+    width: 72%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    button {
+      width: 30%;
+      margin: 0 1%;
+      box-sizing: border-box;
+    }
+  }
+}
+
+/* ---------------------------------
+result
+--------------------------------- */
+
+.result {
+  padding-top: 4%;
+  h1 {
+    margin-bottom: 1%;
+    text-align: center;
+  }
+  .container--result {
+    width: 85%;
+    margin: 0 auto 4%;
+    display: flex;
+    justify-content: center;
+    .diagnosis {
+      width: 78%;
+      height: 190px;
+      padding: 3% 2%;
+      margin-right: 3%;
+      background: $color_light070;
+      border: 3px solid $color_main;
+      border-radius: 10px;
+      h2 {
+        margin-bottom: 3.5%;
+        span {
+          color: $color_accent;
+        }
+      }
+      p {
+        font-size: $font-size_l;
+      }
+    }
+    .score {
+      width: 22%;
+      height: 50%;
+      background: $color_light070;
+      border: 3px solid $color_main;
+      border-radius: 10px;
+      h3 {
+        text-align: center;
+        margin-bottom: 3%;
+      }
+      table {
+        margin: 0 auto 3%;
+        td {
+          vertical-align: bottom;
+          font-size: $font-size_xl;
+          span {
+            font-size: $font-size_l;
+          }
+        }
+      }
+    }
+  }
+  .btn {
+    margin: 0 auto;
+  }
+}

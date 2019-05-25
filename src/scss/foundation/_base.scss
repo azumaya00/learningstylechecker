@@ -1,0 +1,57 @@
+/* ---------------------------------
+base
+--------------------------------- */
+
+body,
+html {
+  width: 100%;
+  background: $color_light100;
+  color: $font-color_default;
+  font-size: $font-size_m;
+  font-family: $font-family_default;
+  font-weight: 400;
+  line-height: 1.6;
+  text-size-adjust: 100%;
+  box-sizing: border-box;
+}
+
+p,
+a {
+  font-family: $font-family_default;
+  font-size: $font-size_l;
+  line-height: 1.5;
+}
+
+a {
+  color: $font-color_link;
+  text-decoration: none;
+  &:hover {
+    color: $color_main;
+  }
+}
+
+img {
+  vertical-align: bottom;
+}
+
+h1 {
+  font-family: $font-family_accent;
+  font-size: $font-size_3l;
+  color: $color_main;
+  line-height: 1.4;
+}
+
+h2 {
+  font-size: $font-size_2l;
+}
+
+h3 {
+  font-family: $font-family_accent;
+  font-size: $font-size_2l;
+  color: $color_main;
+  line-height: 1.4;
+}
+
+button:focus {
+  outline: 0;
+}
