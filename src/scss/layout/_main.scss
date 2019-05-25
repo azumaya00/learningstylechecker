@@ -106,7 +106,7 @@ animation
 }
 
 .question-leave-active {
-  transition: opacity 0.3s, transform 0.5s;
+  transition: opacity 0.5s, transform 0.5s;
   position: absolute;
 }
 
@@ -163,6 +163,10 @@ checklist
     width: 85%;
     margin: 0 auto;
     position: relative;
+    display: flex;
+    li{
+      width: 100%;
+    }
   }
   h1 {
     position: relative;
