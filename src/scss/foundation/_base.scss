@@ -39,10 +39,16 @@ h1 {
   font-size: $font-size_3l;
   color: $color_main;
   line-height: 1.4;
+  @include mq(){
+    @include fontsizeVw(44);
+  }
 }
 
 h2 {
   font-size: $font-size_2l;
+  @include mq(){
+    @include fontsizeVw(24);
+  }
 }
 
 h3 {
@@ -50,6 +56,9 @@ h3 {
   font-size: $font-size_2l;
   color: $color_main;
   line-height: 1.4;
+  @include mq(){
+    @include fontsizeVw(24);
+  } 
 }
 
 button:focus {

@@ -1,0 +1,45 @@
+/* ---------------------------------
+c-animation
+--------------------------------- */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s;
+}
+
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
+
+.v-enter-to,
+.v-leave {
+  opacity: 1;
+}
+
+//質問項目用
+.question-enter-active {
+  transition: opacity 0.5s, transform 1s;
+}
+
+.question-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+  position: absolute;
+}
+
+.question-enter {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.question-leave-to {
+  opacity: 0;
+  transform: translateX(50px);
+}
+
+.question-enter-to {
+  opacity: 1;
+}
+
+.question-leave {
+  opacity: 1;
+}

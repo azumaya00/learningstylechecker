@@ -1,0 +1,68 @@
+/* ---------------------------------
+p-result
+--------------------------------- */
+
+.p-result {
+    padding-top: 4%;
+    &__title {
+      margin-bottom: 1%;
+      text-align: center;
+    }
+    &__container {
+      width: 85%;
+      margin: 0 auto 4%;
+      display: flex;
+      justify-content: center;
+    }
+    &__diagnosis {
+      width: 78%;
+      height: 190px;
+      padding: 3% 2%;
+      margin-right: 3%;
+      background: $color_light070;
+      border: 3px solid $color_main;
+      border-radius: 10px;
+      @include mq() {
+        height: auto;
+      }
+      &__title {
+        margin-bottom: 3.5%;
+        span {
+          color: $color_accent;
+        }
+      }
+      &__text {
+        font-size: $font-size_l;
+        @include mq() {
+          @include fontsizeVw(16);
+        }
+      }
+    }
+    &__score {
+      width: 22%;
+      height: 50%;
+      background: $color_light070;
+      border: 3px solid $color_main;
+      border-radius: 10px;
+      &__title {
+        text-align: center;
+        margin-bottom: 3%;
+      }
+      &__table {
+        margin: 0 auto 3%;
+        &__column {
+          vertical-align: bottom;
+          font-size: $font-size_xl;
+          @include mq() {
+            @include fontsizeVw(18);
+          }
+          span {
+            font-size: $font-size_l;
+            @include mq() {
+              @include fontsizeVw(16);
+            }
+          }
+        }
+      }
+    }
+  }

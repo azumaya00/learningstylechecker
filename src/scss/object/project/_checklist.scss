@@ -1,0 +1,66 @@
+/* ---------------------------------
+p-checklist
+--------------------------------- */
+
+.p-checklist {
+    height: 100%;
+    padding-top: 7%;
+    position: relative;
+    &__list {
+      width: 85%;
+      margin: 0 auto;
+      position: relative;
+      display: flex;
+      &__item{
+        width: 100%;
+        min-width: 680px;
+        @include mq(){
+          width: 85vw;
+        }
+      }
+    }
+   &__title {
+      position: relative;
+      margin-bottom: 4%;
+    }
+    &__question {
+      width: 90%;
+      height: 100px;
+      position: relative;
+      margin: 0 auto 15%;
+      @include mq(sm) {
+        height: 17vw;
+        margin: 0 auto;
+      }
+  
+      &__text {
+        font-size: $font-size_2l;
+        @include mq() {
+          @include fontsizeVw(24);
+        }
+      }
+    }
+    &__btn-group {
+      width: 72%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      @include mq(sm) {
+        width: 85%;
+      }
+      @include mq(xs) {
+        width: 95%;
+      }
+      button {
+        width: 30%;
+        margin: 0 1%;
+        box-sizing: border-box;
+        br {
+          display: none;
+          @include mq(xs) {
+            display: inline;
+          }
+        }
+      }
+    }
+  }

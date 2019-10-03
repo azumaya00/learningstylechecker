@@ -1,19 +1,15 @@
 /* ---------------------------------
-common
+l-main
 --------------------------------- */
-.wrapper {
+.l-main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-#appCheck {
-  width: 100%;
-  margin-top: $space_5l;
-}
-
-.container {
-  &--appCheck {
+  &__container {
+    width: 100%;
+    margin-top: $space_5l;
+  }
+  &__inner {
     width: 100%;
     max-width: 800px;
     height: 500px;
@@ -21,268 +17,10 @@ common
     background: url(../../../dist/img/bgimage.jpg) no-repeat;
     background-size: contain;
     background-position: top center;
-  }
-}
-
-/* ---------------------------------
-button
---------------------------------- */
-.btn {
-  display: block;
-  padding: $space_m $space_2l;
-  box-sizing: border-box;
-  border-radius: 10px;
-  font-size: $font-size_xl;
-  box-shadow: 3px 3px 6px $color_dark026;
-  -webkit-appearance: none;
-  cursor: pointer;
-  transition: all 0.3s;
-  @include mq() {
-    @include fontsizeVw(18);
-  }
-  @include mq(xs) {
-    @include fontsizeVw(24);
-  }
-  &:hover {
-    transition: all 0.3s;
-  }
-  &--large {
-    padding: $space_s $space_2l;
-    font-size: $font-size_2l;
-    @include mq() {
-      @include fontsizeVw(24);
+    @include mq(){
+      width: 100vw;
+      height: calc(5*100vw/8);
     }
-  }
-  &--main {
-    background: $color_main;
-    border: 2px solid $color_main;
-    color: $font-color_inverted;
-    &:hover {
-      background: $color_light070;
-      color: $color_main;
-    }
-  }
-  &--middle {
-    background: $color_middle;
-    border: 2px solid $color_middle;
-    color: $font-color_inverted;
-    &:hover {
-      background: $color_light070;
-      color: $color_middle;
-    }
-  }
-  &--accent {
-    background: $color_accent;
-    border: 2px solid $color_accent;
-    color: $font-color_inverted;
-    &:hover {
-      background: $color_light070;
-      color: $color_accent;
-    }
-  }
-}
-
-/* ---------------------------------
-animation
---------------------------------- */
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s;
-}
-
-.v-enter,
-.v-leave-to {
-  opacity: 0;
-}
-
-.v-enter-to,
-.v-leave {
-  opacity: 1;
-}
-
-//質問項目用
-.question-enter-active {
-  transition: opacity 0.5s, transform 1s;
-}
-
-.question-leave-active {
-  transition: opacity 0.5s, transform 0.5s;
-  position: absolute;
-}
-
-.question-enter {
-  opacity: 0;
-  transform: translateX(50px);
-}
-
-.question-leave-to {
-  opacity: 0;
-  transform: translateX(50px);
-}
-
-.question-enter-to {
-  opacity: 1;
-}
-
-.question-leave {
-  opacity: 1;
-}
-
-/* ---------------------------------
-start
---------------------------------- */
-
-.start {
-  padding-top: 8%;
-  h1 {
-    margin-bottom: 4%;
-    text-align: center;
-  }
-  p {
-    margin-bottom: 8%;
-    font-size: $font-size_2l;
-    text-align: center;
-    @include mq() {
-      @include fontsizeVw(24);
-    }
-  }
-  .btn {
-    margin: 0 auto;
-  }
-}
-
-/* ---------------------------------
-checklist
---------------------------------- */
-
-.checklist {
-  height: 100%;
-  padding-top: 7%;
-  position: relative;
-  ul {
-    width: 85%;
-    margin: 0 auto;
-    position: relative;
-    display: flex;
-    li{
-      width: 100%;
-    }
-  }
-  h1 {
-    position: relative;
-    margin-bottom: 4%;
-  }
-  .question {
-    width: 90%;
-    height: 100px;
-    position: relative;
-    margin: 0 auto 15%;
-    @include mq(sm) {
-      height: 17vw;
-      margin: 0 auto;
-    }
-
-    p {
-      font-size: $font-size_2l;
-      @include mq() {
-        @include fontsizeVw(24);
-      }
-    }
-  }
-  .btn-group {
-    width: 72%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    @include mq(sm) {
-      width: 85%;
-    }
-    @include mq(xs) {
-      width: 95%;
-    }
-    button {
-      width: 30%;
-      margin: 0 1%;
-      box-sizing: border-box;
-      br {
-        display: none;
-        @include mq(xs) {
-          display: inline;
-        }
-      }
-    }
-  }
-}
-
-/* ---------------------------------
-result
---------------------------------- */
-
-.result {
-  padding-top: 4%;
-  h1 {
-    margin-bottom: 1%;
-    text-align: center;
-  }
-  .container--result {
-    width: 85%;
-    margin: 0 auto 4%;
-    display: flex;
-    justify-content: center;
-    .diagnosis {
-      width: 78%;
-      height: 190px;
-      padding: 3% 2%;
-      margin-right: 3%;
-      background: $color_light070;
-      border: 3px solid $color_main;
-      border-radius: 10px;
-      @include mq() {
-        height: auto;
-      }
-      h2 {
-        margin-bottom: 3.5%;
-        span {
-          color: $color_accent;
-        }
-      }
-      p {
-        font-size: $font-size_l;
-        @include mq() {
-          @include fontsizeVw(16);
-        }
-      }
-    }
-    .score {
-      width: 22%;
-      height: 50%;
-      background: $color_light070;
-      border: 3px solid $color_main;
-      border-radius: 10px;
-      h3 {
-        text-align: center;
-        margin-bottom: 3%;
-      }
-      table {
-        margin: 0 auto 3%;
-        td {
-          vertical-align: bottom;
-          font-size: $font-size_xl;
-          @include mq() {
-            @include fontsizeVw(18);
-          }
-          span {
-            font-size: $font-size_l;
-            @include mq() {
-              @include fontsizeVw(16);
-            }
-          }
-        }
-      }
-    }
-  }
-  .btn {
-    margin: 0 auto;
   }
 }
 
@@ -290,58 +28,20 @@ result
 share
 --------------------------------- */
 
-#share{
-  .container--share{
+.l-share {
+  &__container {
     width: 90%;
     margin: 0 auto;
     padding-top: $space_4l;
-    p{
-      text-align: center;
-      font-size: $font-size_l;
-          @include mq() {
-            @include fontsizeVw(18);
-          }
-    }
-    .btn-group--sns{
-      width: 80%;
-      margin: $space_s auto;
-      text-align: center;
-      .twitter-share-button{
-        vertical-align: bottom;
-      }
-    }
-
-  }
-}
-
-
-/* ---------------------------------
-footer
---------------------------------- */
-footer {
-  width: 100%;
-  margin-top: auto;
-  background: $font-color_default;
-  p {
-    display: block;
-    padding: $space_m;
     text-align: center;
-    font-size: $font-size_m;
-    color: $color_light100;
+  }
+  &__text {
+    font-size: $font-size_l;
     @include mq() {
-      @include fontsizeVw(16);
+      @include fontsizeVw(18);
     }
-    a{
-      font-size: $font-size_m;
-      color: $color_light070;
-      transition: all .3s;
-      @include mq() {
-        @include fontsizeVw(16);
-      }
-      &:hover{
-        color: $color_light100;
-        transition: all .3s;
-      }
-    }
+  }
+  &__icon {
+    margin-right: $space_m;
   }
 }

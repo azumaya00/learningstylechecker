@@ -1,0 +1,27 @@
+/* ---------------------------------
+p-footer
+--------------------------------- */
+.p-footer{
+    &__text{
+        display: block;
+        padding: $space_m;
+        text-align: center;
+        font-size: $font-size_m;
+        color: $color_light100;
+        @include mq() {
+          @include fontsizeVw(16);
+        }
+      }
+      &__link{
+        font-size: $font-size_m;
+        color: $color_light070;
+        transition: all .3s;
+        @include mq() {
+          @include fontsizeVw(16);
+        }
+        &:hover{
+          color: $color_light100;
+          transition: all .3s;
+        }
+      }
+} 

@@ -1,0 +1,20 @@
+/* ---------------------------------
+p-start
+--------------------------------- */
+
+.p-start {
+    padding-top: 8%;
+    text-align: center;
+    &__title {
+      margin-bottom: 4%;
+    }
+    &__subtitle {
+      margin-bottom: 8%;
+      font-size: $font-size_2l;
+      @include mq() {
+        @include fontsizeVw(24);
+        margin-bottom: 3%;
+      }
+    }
+  }
+  

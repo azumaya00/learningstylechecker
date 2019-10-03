@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-63387812-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-63387812-1');
+</script>
+
+<!-- font awesome -->
+<script src="https://kit.fontawesome.com/83de085ebe.js" crossorigin="anonymous"></script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -49,21 +62,12 @@
   </head>
 
   <body>
-    <!-- FB用SDKここから -->
-    <div id="fb-root"></div>
-    <script
-      async
-      defer
-      crossorigin="anonymous"
-      src="https://connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v3.3&appId=116977691726957&autoLogAppEvents=1"
-    ></script>
-    <!-- FB用SDKここまで -->
+    <div id="app">
 
-    <div class="wrapper">
-      <header></header>
+    <main class="l-main">
 
-      <section id="appCheck">
-        <div class="container container--appCheck">
+      <div class=l-main__container>
+        <div class="l-main__inner">
           <transition mode="out-in">
             <div
               v-bind:is="currentPage"
@@ -71,54 +75,37 @@
               v-on:start-check="moveCheck"
               v-on:finish-check="moveResult"
               v-on:retry-check="moveStart"
+              v-on:share-diagnosis="createShareLink"
             ></div>
           </transition>
         </div>
         <!-- container end -->
-      </section>
-
-      <section id="share">
-        <div class="container container--share">
-          <p>気に入ったらシェアしてね！</p>
-          <div class="btn-group--sns">
+      </div>
+      <div class="l-share"  v-if="isShare">
+        <div class="l-share__container">
+          <p class="l-share__text">気に入ったらシェアしてね！</p>
+          <div class="c-btn__group">
             <!-- twitterボタン -->
-            <a
-              href="https://twitter.com/share?ref_src=twsrc%5Etfw"
-              class="twitter-share-button"
-              data-show-count="false"
-              >Tweet</a
-            ><script
-              async
-              src="https://platform.twitter.com/widgets.js"
-              charset="utf-8"
-            ></script>
+           <span v-on:click="popupWindow(twitterUrl)" class="c-btn c-btn--small c-btn--twitter"><i class="fab fa-twitter l-share__icon"></i>Twitterでシェア</span>
             <!-- FBボタン -->
-            <div
-              class="fb-share-button"
-              data-href="https://learntypecheck.yuruknowledge.com/"
-              data-layout="button"
-              data-size="small"
-            >
-              <a
-                target="_blank"
-                href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flearntypecheck.yuruknowledge.com%2F&amp;src=sdkpreparse"
-                class="fb-xfbml-parse-ignore"
-                >シェア</a
-              >
+            <span  v-on:click="popupWindow(fbUrl)" class="c-btn c-btn--small c-btn--facebook"><i class="fab fa-facebook-f l-share__icon"></i>Facebookでシェア</span>
             </div>
           </div>
         </div>
         <!-- container end -->
-      </section>
+      </div>
 
-      <footer>
-        <p>
+    </main>
+
+      <footer class="l-footer">
+        <p class="p-footer__text">
           &copy;Copyright2019
-          <a href="https://yuruknowledge.com/">ゆるナレッジfromマレーシア</a
+          <a href="https://yuruknowledge.com/" class="p-footer__link">ゆるナレッジfromマレーシア</a
           >.All Rights Reserved
         </p>
       </footer>
     </div>
     <script src="dist/js/bundle.js"></script>
+  </div>
   </body>
 </html>

@@ -1,0 +1,112 @@
+/* ---------------------------------
+c-button
+--------------------------------- */
+//汎用ボタン
+.c-btn {
+  margin: 0 auto $space_l;
+  display: inline-block;
+  border-radius: 10px;
+  box-shadow: 3px 3px 6px $color_dark026;
+  -webkit-appearance: none;
+  text-align: center;
+  font-size: $font-size_xl;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+
+  &:hover {
+    box-shadow: 0 5px 5px 0 $color_dark026;
+    transition: all 0.3s ease-out;
+  }
+
+  //2個並びのボタン
+  &__group {
+    width: 100%;
+    max-width: 800px;
+    margin: $space_4l auto 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    @include mq() {
+      flex-direction: column;
+      margin-top: $space_l;
+    }
+  }
+
+  //ボタン大きさ
+  &--large {
+    padding: $space_s $space_2l;
+    font-size: $font-size_2l;
+    @include mq() {
+      @include fontsizeVw(24);
+    }
+  }
+
+  &--middle{
+    padding: $space_m $space_2l;
+    @include mq() {
+      @include fontsizeVw(18);
+    }
+    @include mq(xs) {
+      @include fontsizeVw(24);
+    }
+  }
+
+  &--small {
+    width: 40%;
+    padding: $space_m $space_2l;
+    font-size: $font-size_l;
+  }
+
+  //ボタン色
+  &--main {
+    background: $color_main;
+    border: 2px solid $color_main;
+    color: $font-color_inverted;
+    &:hover {
+      background: $color_light070;
+      color: $color_main;
+    }
+  }
+  &--sub {
+    background: $color_middle;
+    border: 2px solid $color_middle;
+    color: $font-color_inverted;
+    &:hover {
+      background: $color_light070;
+      color: $color_middle;
+    }
+  }
+  &--accent {
+    background: $color_accent;
+    border: 2px solid $color_accent;
+    color: $font-color_inverted;
+    &:hover {
+      background: $color_light070;
+      color: $color_accent;
+    }
+  }
+  &--twitter {
+    background: #00acee;
+    border: 2px solid #00acee;
+    color: $color_light100;
+
+    &:hover {
+      background: $color_light100;
+      border: 2px solid #00acee;
+      color: #00acee;
+    }
+  }
+
+  &--facebook {
+    background: #3b5998;
+    border: 2px solid #3b5998;
+    color: $color_light100;
+
+    &:hover {
+      background: $color_light100;
+      border: 2px solid #3b5998;
+      color: #3b5998;
+    }
+  }
+}
