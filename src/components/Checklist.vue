@@ -3,7 +3,7 @@
     <ul class="p-checklist__list">
       <transition-group appear mode="in-out" name="question" tag="ul">
         <li v-for="(question, index) in filteredItems" :key="question.id" class="p-checklist__list__item">
-          <h1 class="p-checklist__title">Q{{ question.id }}.</h1>
+          <h1 class="p-checklist__title">Q{{ currentQuestion }}.</h1>
           <div class="p-checklist__question">
             <p v-html="question.text" class="p-checklist__question__text"></p>
           </div>
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import ja from '../i18n/ja.js'
+
 /**
  * チェックリスト画面コンポーネント
  * 24問の質問を順次表示し、ユーザーの回答に基づいてスコアを計算
@@ -36,136 +38,97 @@ export default {
         { type: 'auditory', val: 0 },    // 聴覚学習
         { type: 'tactile', val: 0 }      // 触覚・運動感覚学習
       ],
-      // 診断用の質問リスト
-      questions: [
-        {
-          id: 1,
-          text: '講義を聴くより教科書を読む方を好む'
-        },
-        {
-          id: 2,
-          text: 'フラッシュカードを使うと覚えやすい'
-        },
-        { id: 3, text: 'クロスワードパズルが好きだ' },
-        {
-          id: 4,
-          text: '勉強するときは書きとめたり<br>ノートを取ることを好む'
-        },
-        {
-          id: 5,
-          text: '地図を読んで目的地に行くのは得意だ'
-        },
-        { id: 6, text: '新しい情報は読んで得る事を好む' },
-        {
-          id: 7,
-          text: '何かを覚えようとするときに<br>頭の中に図や絵を描くのが好きだ'
-        },
-        { id: 8, text: '表やグラフを作るのは楽しい' },
-        {
-          id: 9,
-          text: '情報を理解するために<br>声に出して読むことがある'
-        },
-        {
-          id: 10,
-          text: '表やグラフは誰かに説明して貰う必要がある'
-        },
-        {
-          id: 11,
-          text: 'ニュースは新聞を読むより<br>ラジオで聞く方が好きだ'
-        },
-        {
-          id: 12,
-          text: '数学などの公式は書いて覚えるより<br>唱えて覚える方が好きだ'
-        },
-        {
-          id: 13,
-          text: '道案内は書かれたものより<br>音声で聞くほうを好む'
-        },
-        {
-          id: 14,
-          text: '物語は読むより朗読を聞く方を好む'
-        },
-        { id: 15, text: '電話番号は何回か唱えて覚える' },
-        {
-          id: 16,
-          text: '何かを学ぶなら本より講義や音声教材が良い'
-        },
-        { id: 17, text: '体験型のアクティビティは楽しい' },
-        {
-          id: 18,
-          text: '鍵やコイン、ペンなどを手で触って遊ぶ'
-        },
-        { id: 19, text: '実際に体験して学ぶことが好きだ' },
-        { id: 20, text: '体を使って何かを学ぶ方を好む' },
-        {
-          id: 21,
-          text: '勉強するときにガムを噛んだり<br>何かを食べながらする'
-        },
-        {
-          id: 22,
-          text: '誰かとひっついたり<br>何かを触ったりすると落ち着く'
-        },
-        {
-          id: 23,
-          text: '何かを覚えるときは何度か書いて覚える'
-        },
-        {
-          id: 24,
-          text: '講義より実験の方がたくさんのことを学べる'
-        }
-      ]
+      // 国際化テキスト
+      texts: ja,
+      // 診断用の質問リスト（i18nから取得）
+      questions: ja.questions.map((text, index) => ({
+        id: index + 1,
+        text: text
+      })),
+      // ランダム化された質問順序
+      shuffledQuestions: []
     }
   },
   computed: {
     /**
-     * 現在表示する質問をフィルタリング
-     * @returns {Array} 現在の質問番号に該当する質問オブジェクトの配列
+     * 現在表示する質問を取得
+     * @returns {Array} 現在の質問オブジェクトの配列
      */
     filteredItems() {
-      return this.searchItem(this.questions, this.currentQuestion)
+      // ランダム化された質問配列から現在の質問を取得
+      const currentQuestionData = this.shuffledQuestions[this.currentQuestion - 1]
+      return currentQuestionData ? [currentQuestionData] : []
     }
+  },
+  created() {
+    // コンポーネント作成時に質問をランダム化
+    this.shuffleQuestions()
   },
   methods: {
     /**
-     * 指定されたIDの質問を取得
-     * @param {Array} questionList - 質問リスト
-     * @param {number} questionId - 取得する質問のID
-     * @returns {Array} 該当する質問オブジェクトの配列
+     * 質問をランダム化する
+     * 24個全ての質問をランダムに並び替える（Fisher-Yatesシャッフル）
      */
-    searchItem(questionList, questionId) {
-      return questionList.filter(question => question.id === questionId)
+    shuffleQuestions() {
+      // Fisher-Yatesシャッフルアルゴリズム
+      const shuffleArray = (array) => {
+        const shuffled = [...array]
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1))
+          ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+        }
+        return shuffled
+      }
+      
+      // 全24問をランダムに並び替え
+      this.shuffledQuestions = shuffleArray(this.questions)
+      
+      // 重複チェック
+      const ids = this.shuffledQuestions.map(q => q.id)
+      const uniqueIds = [...new Set(ids)]
+      if (ids.length !== uniqueIds.length) {
+        console.warn('[Checklist] Duplicate questions detected! Re-shuffling...')
+        this.shuffleQuestions()
+        return
+      }
+      
+      console.log('[Checklist] All questions shuffled:', this.shuffledQuestions.map(q => q.id))
     },
-    
+
     /**
      * 回答に基づいてスコアを加算し、次の質問へ進む
-     * 質問の範囲に応じて適切な学習スタイルのスコアに加算
+     * ランダム化された質問でも正しいスコアを計算
      * @param {number} point - 加算するポイント（1, 3, 5のいずれか）
      */
     addPoint(point) {
-      // 1問目：スコアをリセットして視覚学習に加算
+      // 1問目：スコアをリセット（質問の再ランダム化は行わない）
       if (this.currentQuestion === 1) {
-        this.resetScores()
-        this.score[0].val += point
-        this.currentQuestion++
+        this.score[0].val = 0
+        this.score[1].val = 0
+        this.score[2].val = 0
       }
-      // 2-8問目：視覚学習（visual）
-      else if (this.currentQuestion <= 8) {
+      
+      // 現在の質問の元のIDを取得
+      const currentQuestionData = this.shuffledQuestions[this.currentQuestion - 1]
+      const originalId = currentQuestionData.id
+      
+      // 元のIDに基づいてスコアを加算
+      if (originalId >= 1 && originalId <= 8) {
+        // 視覚学習（visual）
         this.score[0].val += point
-        this.currentQuestion++
-      }
-      // 9-16問目：聴覚学習（auditory）
-      else if (this.currentQuestion <= 16) {
+      } else if (originalId >= 9 && originalId <= 16) {
+        // 聴覚学習（auditory）
         this.score[1].val += point
-        this.currentQuestion++
-      }
-      // 17-23問目：触覚・運動感覚学習（tactile）
-      else if (this.currentQuestion <= 23) {
+      } else if (originalId >= 17 && originalId <= 24) {
+        // 触覚・運動感覚学習（tactile）
         this.score[2].val += point
-        this.currentQuestion++
       }
-      // 24問目：最後の質問、診断完了
-      else if (this.currentQuestion === 24) {
-        this.score[2].val += point
+      
+      // 次の質問へ進む
+      this.currentQuestion++
+      
+      // 最後の質問の場合は診断完了
+      if (this.currentQuestion > 24) {
         this.completeDiagnosis()
       }
     },
@@ -177,6 +140,9 @@ export default {
       this.score[0].val = 0
       this.score[1].val = 0
       this.score[2].val = 0
+      this.currentQuestion = 1
+      // リトライ時は質問を再ランダム化
+      this.shuffleQuestions()
     },
     
     /**

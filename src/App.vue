@@ -39,15 +39,15 @@
       </div>
       <div class="l-share" v-if="isShare">
         <div class="l-share__container">
-          <p class="l-share__text">気に入ったらシェアしてね！</p>
+          <p class="l-share__text">{{ texts.share.text }}</p>
           <div class="c-btn__group">
             <!-- twitterボタン -->
             <span @click="popupWindow(twitterUrl)" class="c-btn c-btn--small c-btn--twitter">
-              <i class="fab fa-twitter l-share__icon"></i>Twitterでシェア
+              <i class="fab fa-twitter l-share__icon"></i>{{ texts.share.twitter }}
             </span>
             <!-- FBボタン -->
             <span @click="popupWindow(fbUrl)" class="c-btn c-btn--small c-btn--facebook">
-              <i class="fab fa-facebook-f l-share__icon"></i>Facebookでシェア
+              <i class="fab fa-facebook-f l-share__icon"></i>{{ texts.share.facebook }}
             </span>
           </div>
         </div>
@@ -70,8 +70,7 @@ import Start from './components/Start.vue'
 import Checklist from './components/Checklist.vue'
 import Result from './components/Result.vue'
 import { loadTheme, setTheme, getCurrentTheme } from './lib/theme'
-import { getAppMode } from './lib/env'
-import { getCurrentContentPack, validateContentPack } from './lib/contentPack'
+import ja from './i18n/ja.js'
 
 /**
  * メインアプリケーションコンポーネント
@@ -97,7 +96,9 @@ export default {
       // Facebookシェア用URL
       fbUrl: '',
       // 現在のテーマ（初期化時にgetCurrentTheme()で設定される）
-      currentTheme: 'legacy-light'
+      currentTheme: 'legacy-light',
+      // 国際化テキスト
+      texts: ja
     }
   },
   computed: {
@@ -120,10 +121,10 @@ export default {
   methods: {
     /**
      * アプリケーション初期化
-     * コンテンツパック検証、その他の初期化処理を実行
+     * 基本的な初期化処理を実行
      */
     initializeApp() {
-      this.validateContentPack()
+      console.log('[App] Application initialized')
     },
 
     /**
@@ -145,33 +146,6 @@ export default {
       setTheme(theme)
     },
 
-    /**
-     * コンテンツパックの整合性を検証
-     * 起動時に全年齢版でレア画像が設定されていないかチェック
-     */
-    validateContentPack() {
-      try {
-        const mode = getAppMode()
-        const pack = getCurrentContentPack()
-        
-        console.log(`[App] Validating content pack for mode: ${mode}`)
-        
-        if (!validateContentPack(pack)) {
-          console.warn('[App] Content pack validation failed!')
-          
-          // 全年齢版でレア画像が設定されている場合は強制的に通常枠のみにフォールバック
-          if (mode === 'allages') {
-            console.warn('[App] Forcing all-ages mode to use normal images only')
-            // ここで強制的に通常画像のみを使用するように設定
-            // 実際の実装では、アセット解決時にガードをかける
-          }
-        } else {
-          console.log('[App] Content pack validation passed')
-        }
-      } catch (error) {
-        console.error('[App] Content pack validation error:', error)
-      }
-    },
 
     /**
      * 診断開始時の画面遷移
@@ -179,6 +153,8 @@ export default {
      */
     moveCheck() {
       this.currentPage = 'Checklist'
+      // ページの最上部にスクロール
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
 
     /**
@@ -190,6 +166,8 @@ export default {
       this.score = score
       this.currentPage = 'Result'
       this.isShare = true
+      // ページの最上部にスクロール
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
 
     /**
@@ -199,6 +177,8 @@ export default {
     moveStart() {
       this.currentPage = 'Start'
       this.isShare = false
+      // ページの最上部にスクロール
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     },
 
     /**
