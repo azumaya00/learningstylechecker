@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { buildShareUrls, copyToClipboard } from '../utils/share'
+import { useShare } from '../utils/share'
 
 /**
  * シェアボタンコンポーネント
@@ -74,12 +74,34 @@ export default {
       validator: (value) => ['ja', 'en'].includes(value)
     }
   },
-  computed: {
-    /**
-     * 各SNS用のシェアURL
-     */
-    shareUrls() {
-      return buildShareUrls(this.type, this.locale)
+  setup(props) {
+    // より完全なフォールバック関数
+    const t = (key) => {
+      const fallbacks = {
+        'share.cta.x': 'X',
+        'share.cta.line': 'LINE',
+        'share.cta.wa': 'WhatsApp',
+        'share.cta.fb': 'Facebook',
+        'share.cta.copy': 'コピー',
+        'share.message.base': '私の学習スタイルは「%TYPE%」でした！あなたも診断してみませんか？',
+        'share.tags': '#学習スタイル診断 #勉強法 #自己分析',
+        'labels.type.v': '視覚型',
+        'labels.type.a': '聴覚型',
+        'labels.type.t': '触覚型',
+        'labels.type.va': '視覚・聴覚型',
+        'labels.type.vt': '視覚・触覚型',
+        'labels.type.at': '聴覚・触覚型',
+        'labels.type.all': 'バランス型',
+        'app.title': '学習スタイル診断'
+      }
+      return fallbacks[key] || key
+    }
+    
+    const { shareUrl, copyLink: copyLinkUtil } = useShare(t, props.locale)
+    
+    return {
+      shareUrl,
+      copyLinkUtil
     }
   },
   methods: {
@@ -87,38 +109,38 @@ export default {
      * Xでシェア
      */
     shareOnX() {
-      this.openShareWindow(this.shareUrls.x)
+      this.openShareWindow(this.shareUrl('x', this.type))
     },
 
     /**
      * LINEでシェア
      */
     shareOnLine() {
-      this.openShareWindow(this.shareUrls.line)
+      this.openShareWindow(this.shareUrl('line', this.type))
     },
 
     /**
      * WhatsAppでシェア
      */
     shareOnWhatsApp() {
-      this.openShareWindow(this.shareUrls.whatsapp)
+      this.openShareWindow(this.shareUrl('wa', this.type))
     },
 
     /**
      * Facebookでシェア
      */
     shareOnFacebook() {
-      this.openShareWindow(this.shareUrls.facebook)
+      this.openShareWindow(this.shareUrl('fb', this.type))
     },
 
     /**
      * リンクをコピー
      */
     async copyLink() {
-      const success = await copyToClipboard(this.shareUrls.copy)
-      if (success) {
+      try {
+        await this.copyLinkUtil()
         alert('リンクをコピーしました！')
-      } else {
+      } catch (error) {
         alert('コピーに失敗しました。手動でコピーしてください。')
       }
     },

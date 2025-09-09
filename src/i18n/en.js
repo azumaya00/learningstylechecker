@@ -91,5 +91,35 @@ export default {
     ],
     "buttons": {
         "retry": "Restart"
+    },
+    "labels": {
+        "type": {
+            "v": "Visual",
+            "a": "Auditory", 
+            "t": "Tactile",
+            "va": "Visual-Auditory",
+            "vt": "Visual-Tactile",
+            "at": "Auditory-Tactile",
+            "all": "Balanced"
+        }
+    },
+    "share": {
+        "message": {
+            "base": "My learning style is \"%TYPE%\"! Why don't you try the diagnosis too?"
+        },
+        "tags": "#learningstyle #diagnosis #education",
+        "cta": {
+            "x": "Share on X",
+            "line": "Share on LINE",
+            "wa": "Share on WhatsApp",
+            "fb": "Share on Facebook",
+            "copy": "Copy Link"
+        }
+    },
+    "common": {
+        "skipToContent": "Skip to main content"
+    },
+    "errors": {
+        "selectOne": "Please select one"
     }
 }

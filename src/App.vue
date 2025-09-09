@@ -43,7 +43,7 @@
             <div :class="{ 'card--hero': currentPage === 'Start' }">
               <component
                 :is="currentPage"
-                :score="score"
+                :result="diagnosisResult"
                 :current-theme="currentTheme"
                 :current-locale="currentLocale"
                 :texts="texts"
@@ -75,6 +75,8 @@ import Result from './components/Result.vue'
 import { loadTheme, setTheme, getCurrentTheme } from './lib/theme'
 import { getCurrentLocale, setLocale, AVAILABLE_LOCALES } from './lib/locale'
 import { getTexts } from './lib/i18n'
+// useLocale は Composition API のコンポーザブルのため、Options API では使用しない
+// VueのOptions APIでは型定義が制限されるため、any型を使用
 
 /**
  * メインアプリケーションコンポーネント
@@ -95,8 +97,8 @@ export default {
     return {
       // 現在表示中のページコンポーネント名
       currentPage: 'Start',
-      // 診断結果のスコア配列
-      score: [],
+      // 診断結果
+      diagnosisResult: null,
       // 現在のテーマ（初期化時にgetCurrentTheme()で設定される）
       currentTheme: 'legacy-light',
       // 現在の言語（初期化時にgetCurrentLocale()で設定される）
@@ -173,15 +175,17 @@ export default {
       this.currentPage = 'Checklist'
       // ページの最上部にスクロール
       window.scrollTo({ top: 0, behavior: 'smooth' })
+      // 背景をクリア
+      document.documentElement.style.backgroundImage = 'none'
     },
 
     /**
      * 診断完了時の画面遷移
      * チェックリスト画面から結果画面へ遷移し、シェア機能を有効化
-     * @param {Array} score - 診断結果のスコア配列
+     * @param {DiagnoseResult} result - 診断結果
      */
-    moveResult(score) {
-      this.score = score
+    moveResult(result) {
+      this.diagnosisResult = result
       this.currentPage = 'Result'
       // ページの最上部にスクロール
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -192,9 +196,12 @@ export default {
      * 結果画面からスタート画面へ戻り、シェア機能を無効化
      */
     moveStart() {
+      this.diagnosisResult = null
       this.currentPage = 'Start'
       // ページの最上部にスクロール
       window.scrollTo({ top: 0, behavior: 'smooth' })
+      // 背景をリセット
+      document.documentElement.style.backgroundImage = ''
     },
 
   }

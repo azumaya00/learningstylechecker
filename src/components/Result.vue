@@ -1,13 +1,14 @@
 <template>
-  <div class="p-result">
+  <div class="p-result" id="main">
     <h1 class="p-result__title">Result</h1>
-    <div class="p-result__container">
+    <div class="p-result__container" aria-live="polite" aria-atomic="true">
       <!-- キャライラスト表示 -->
       <div class="result-hero">
         <img 
           :src="resultImage" 
           :alt="`診断結果: ${resultDiagnosis}`"
           loading="lazy"
+          decoding="async"
         />
       </div>
       
@@ -21,174 +22,109 @@
           <tbody>
             <tr>
               <td class="p-result__score__table__column">{{ texts.results?.visualLabel || '視覚' }}:</td>
-              <td class="p-result__score__table__column">{{ score[0].val }}{{ texts.results?.pointsSuffix || '点' }}</td>
+              <td class="p-result__score__table__column">{{ result.scores.v }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
             <tr>
               <td class="p-result__score__table__column">{{ texts.results?.auditoryLabel || '聴覚' }}:</td>
-              <td class="p-result__score__table__column">{{ score[1].val }}{{ texts.results?.pointsSuffix || '点' }}</td>
+              <td class="p-result__score__table__column">{{ result.scores.a }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
             <tr>
               <td class="p-result__score__table__column">
                 <span>{{ texts.results?.tactileLabel || '触覚・運動感覚' }}:&nbsp;</span>
               </td>
-              <td class="p-result__score__table__column">{{ score[2].val }}{{ texts.results?.pointsSuffix || '点' }}</td>
+              <td class="p-result__score__table__column">{{ result.scores.t }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <!-- シェアボタン -->
-    <ShareButtons :type="selectedType" :locale="currentLocale" />
+    <ShareButtons 
+      :type="selectedType" 
+      :locale="props.currentLocale"
+    />
     
     <div class="c-btn__group">
-      <button class="c-btn c-btn--middle c-btn--main" @click="clickRetry">{{ texts.buttons?.retry || '最初からやり直す' }}</button>
+      <button class="c-btn c-btn--middle c-btn--main focus-visible:outline-2 focus-visible:outline-offset-2" @click="clickRetry">{{ texts.buttons?.retry || '最初からやり直す' }}</button>
     </div>
   </div>
 </template>
 
-<script>
-import { computeTypeId, convertScoreArray } from '../lib/diagnosis'
-import { isDarkPreferred, onThemeChange } from '../lib/theme'
-import assetMapRaw from '../assets/assetMap.js'
+<script setup lang="ts">
+import { computed, watch, onMounted } from 'vue'
+import { getCurrentImagePath } from '@/lib/assetMap'
 import ShareButtons from './ShareButtons.vue'
+import { useI18nGuard } from '@/utils/i18nGuard'
+import { applyOg } from '@/utils/seo'
+import { DiagnoseResult, ResultType } from '@/types/diagnosis'
 
-/**
- * 結果画面コンポーネント
- * 診断結果を表示し、学習スタイルに応じたアドバイスを提供
- * スコアに基づいて適切な学習タイプを判定
- * 新しいアセット解決システムを使用してイラストを選択
- */
-export default {
-  name: 'Result',
-  components: {
-    ShareButtons
-  },
-  props: {
-    // 親コンポーネントから受け取るスコア配列
-    score: {
-      type: Array,
-      required: true
-    },
-    // 現在のテーマ
-    currentTheme: {
-      type: String,
-      required: true
-    },
-    // 現在の言語
-    currentLocale: {
-      type: String,
-      required: true
-    },
-    // 国際化テキスト
-    texts: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      // 判定された学習タイプ
-      selectedType: 'all',
-      // 現在の画像パス
-      currentImagePath: '',
-      // アセットマップ
-      assetMap: assetMapRaw,
-      // テーマ変更監視の停止関数
-      stopThemeWatch: null
-    }
-  },
-  computed: {
-    /**
-     * 結果画像のパスを取得
-     * テーマに応じてlight/dark画像を選択
-     * @returns {string} 結果画像のURL
-     */
-    resultImage() {
-      return this.currentImagePath || `/images/result-${this.selectedType}.svg`
-    },
-
-    /**
-     * 結果診断名を取得
-     * @returns {string} 診断名
-     */
-    resultDiagnosis() {
-      return this.texts.resultsLabels[this.selectedType] || '不明'
-    },
-
-    /**
-     * 現在の結果データを取得
-     * @returns {Object} 結果データ
-     */
-    currentResult() {
-      return this.texts.results[this.selectedType] || this.texts.results.all
-    }
-  },
-  watch: {
-    /**
-     * テーマ変更を監視
-     * テーマが変更されたときに画像パスを更新
-     */
-    currentTheme() {
-      console.log('[Result] Theme changed to:', this.currentTheme)
-      this.updateImagePath()
-    }
-  },
-  created() {
-    // コンポーネント作成時に学習タイプを判定
-    this.determineLearningType()
-    this.updateImagePath()
-  },
-  
-  beforeUnmount() {
-    // テーマ変更監視を停止
-    if (this.stopThemeWatch) {
-      this.stopThemeWatch()
-    }
-  },
-  methods: {
-    /**
-     * 画像パスを更新
-     * 現在のテーマに応じてlight/dark画像を選択
-     */
-    updateImagePath() {
-      if (!this.assetMap || !this.selectedType) {
-        console.warn('[Result] Missing assetMap or selectedType, using fallback')
-        this.currentImagePath = `/images/result-${this.selectedType}.svg`
-        return
-      }
-      
-      const asset = this.assetMap[this.selectedType]
-      if (!asset) {
-        console.warn('[Result] Asset not found for type:', this.selectedType)
-        this.currentImagePath = `/images/result-${this.selectedType}.svg`
-        return
-      }
-      
-      // 現在のテーマに応じて画像を選択
-      const isDark = this.currentTheme === 'legacy-dark'
-      this.currentImagePath = isDark ? asset.dark : asset.light
-      
-      console.log('[Result] Updated image path:', this.currentImagePath, '(isDark:', isDark, ', theme:', this.currentTheme, ')')
-    },
-
-    /**
-     * スコアに基づいて学習タイプを判定
-     * 新しい診断ロジックを使用
-     */
-    determineLearningType() {
-      const scores = convertScoreArray(this.score)
-      this.selectedType = computeTypeId(scores)
-      console.log('[Result] Determined learning type:', this.selectedType)
-    },
-
-
-    /**
-     * リトライボタンクリック時の処理
-     * 親コンポーネントにリトライイベントを送信
-     */
-    clickRetry() {
-      this.$emit('retry-check')
-    }
-  }
+interface Props {
+  result: DiagnoseResult
+  currentTheme: string
+  currentLocale: string
+  texts: any
 }
+
+const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  'retry-check': []
+}>()
+
+// i18n関数のシミュレーション（既存のtextsから取得）
+const t = (key: string) => {
+  const keys = key.split('.')
+  let value = props.texts
+  for (const k of keys) {
+    value = value?.[k]
+  }
+  return value || key
+}
+
+// i18nガードを使用
+const { trTitle, trDesc } = useI18nGuard(t)
+
+// 診断結果のタイプ
+const selectedType = computed(() => props.result.type)
+
+// 結果の診断名
+const resultDiagnosis = computed(() => {
+  return trTitle(props.result.type) || '不明'
+})
+
+// 現在の結果データ
+const currentResult = computed(() => {
+  const title = trTitle(props.result.type) || '不明'
+  const description = trDesc(props.result.type) || '結果が見つかりませんでした。'
+  return { title, description }
+})
+
+// 結果画像のパス
+const resultImage = computed(() => {
+  return getCurrentImagePath(selectedType.value, props.currentTheme)
+})
+
+// OGP更新
+function updateOg() {
+  if (!props.result) return
+  applyOg({
+    title: `${trTitle(props.result.type)} | ${t('app.title')}`,
+    description: trDesc(props.result.type),
+    url: location.origin + '/',
+    image: getCurrentImagePath(props.result.type, props.currentTheme)
+  })
+}
+
+// リトライボタンクリック時の処理
+function clickRetry() {
+  emit('retry-check')
+}
+
+// コンポーネントマウント時にOGP更新
+onMounted(updateOg)
+
+// テーマ変更時の画像更新
+watch(() => props.currentTheme, () => {
+  // 画像パスは computed で自動更新される
+})
 </script>

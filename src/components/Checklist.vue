@@ -1,182 +1,185 @@
 <template>
   <div class="p-checklist">
-    <ul class="p-checklist__list">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
+      {{ texts.common?.skipToContent || 'メインコンテンツにスキップ' }}
+    </a>
+    <ul class="p-checklist__list" role="group" aria-labelledby="question-title">
       <transition-group appear mode="in-out" name="question" tag="ul">
         <li v-for="(question, index) in filteredItems" :key="question.id" class="p-checklist__list__item">
-          <h1 class="p-checklist__title">Q{{ currentQuestion }}.</h1>
+          <h1 id="question-title" class="p-checklist__title">Q{{ currentQuestion }}.</h1>
           <div class="p-checklist__question">
             <p v-html="question.text" class="p-checklist__question__text"></p>
           </div>
         </li>
       </transition-group>
     </ul>
-    <div class="p-checklist__btn-group">
-      <button class="c-btn c-btn--middle c-btn--accent" @click="addPoint(5)">{{ texts.choices?.always || 'いつもそうだ' }}</button>
-      <button class="c-btn c-btn--middle c-btn--sub" @click="addPoint(3)">{{ texts.choices?.sometimes || '時々そうだ' }}</button>
-      <button class="c-btn c-btn--middle c-btn--main" @click="addPoint(1)">{{ texts.choices?.rarely || 'めったにない' }}</button>
+    <div class="p-checklist__btn-group" role="group" aria-label="回答選択">
+      <button 
+        class="c-btn c-btn--middle c-btn--accent focus-visible:outline-2 focus-visible:outline-offset-2" 
+        @click="addPoint(5)"
+        @keydown.enter.stop.prevent="addPoint(5)"
+        @keydown.space.stop.prevent="addPoint(5)"
+        :aria-pressed="selectedValue === 5"
+      >{{ texts.choices?.always || 'いつもそうだ' }}</button>
+      <button 
+        class="c-btn c-btn--middle c-btn--sub focus-visible:outline-2 focus-visible:outline-offset-2" 
+        @click="addPoint(3)"
+        @keydown.enter.stop.prevent="addPoint(3)"
+        @keydown.space.stop.prevent="addPoint(3)"
+        :aria-pressed="selectedValue === 3"
+      >{{ texts.choices?.sometimes || '時々そうだ' }}</button>
+      <button 
+        class="c-btn c-btn--middle c-btn--main focus-visible:outline-2 focus-visible:outline-offset-2" 
+        @click="addPoint(1)"
+        @keydown.enter.stop.prevent="addPoint(1)"
+        @keydown.space.stop.prevent="addPoint(1)"
+        :aria-pressed="selectedValue === 1"
+      >{{ texts.choices?.rarely || 'めったにない' }}</button>
+    </div>
+    <div v-if="showError" class="p-checklist__error" role="alert" aria-live="polite">
+      {{ texts.errors?.selectOne || '選択してください' }}
     </div>
   </div>
 </template>
 
-<script>
-/**
- * チェックリスト画面コンポーネント
- * 24問の質問を順次表示し、ユーザーの回答に基づいてスコアを計算
- * 視覚・聴覚・触覚・運動感覚の3つの学習スタイルを診断
- */
-export default {
-  name: 'Checklist',
-  props: {
-    // 現在の言語
-    currentLocale: {
-      type: String,
-      required: true
-    },
-    // 国際化テキスト
-    texts: {
-      type: Object,
-      required: true
-    }
-  },
-  data() {
-    return {
-      // 現在の質問番号（1-24）
-      currentQuestion: 1,
-      // 各学習スタイルのスコア
-      score: [
-        { type: 'visual', val: 0 },      // 視覚学習
-        { type: 'auditory', val: 0 },    // 聴覚学習
-        { type: 'tactile', val: 0 }      // 触覚・運動感覚学習
-      ],
-      // 診断用の質問リスト（i18nから取得）
-      questions: [],
-      // ランダム化された質問順序
-      shuffledQuestions: []
-    }
-  },
-  computed: {
-    /**
-     * 現在表示する質問を取得
-     * @returns {Array} 現在の質問オブジェクトの配列
-     */
-    filteredItems() {
-      // ランダム化された質問配列から現在の質問を取得
-      const currentQuestionData = this.shuffledQuestions[this.currentQuestion - 1]
-      return currentQuestionData ? [currentQuestionData] : []
-    }
-  },
-  created() {
-    // 質問リストを初期化
-    this.initializeQuestions()
-    // コンポーネント作成時に質問をランダム化
-    this.shuffleQuestions()
-  },
-  watch: {
-    // 言語が変更されたときに質問リストを更新
-    texts() {
-      this.initializeQuestions()
-      this.shuffleQuestions()
-    }
-  },
-  methods: {
-    /**
-     * 質問リストを初期化
-     * 現在の言語のテキストから質問リストを作成
-     */
-    initializeQuestions() {
-      this.questions = this.texts.questions.map((text, index) => ({
-        id: index, // 0-23のインデックス
-        text: text
-      }))
-    },
+<script setup lang="ts">
+import { ref, computed, onMounted, watch } from 'vue'
+import { useDiagnosis } from '@/composables/useDiagnosis'
+import { buildQuestions } from '@/utils/buildQuestions'
+import { useI18nGuard } from '@/utils/i18nGuard'
+import { DiagnoseResult } from '@/types/diagnosis'
 
-    /**
-     * 質問をランダム化する
-     * 24個全ての質問をランダムに並び替える（Fisher-Yatesシャッフル）
-     */
-    shuffleQuestions() {
-      // Fisher-Yatesシャッフルアルゴリズム
-      const shuffleArray = (array) => {
-        const shuffled = [...array]
-        for (let i = shuffled.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1))
-          ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-        }
-        return shuffled
-      }
-      
-      // 全24問をランダムに並び替え
-      this.shuffledQuestions = shuffleArray(this.questions)
-      
-      // 重複チェック
-      const ids = this.shuffledQuestions.map(q => q.id)
-      const uniqueIds = [...new Set(ids)]
-      if (ids.length !== uniqueIds.length) {
-        console.warn('[Checklist] Duplicate questions detected! Re-shuffling...')
-        this.shuffleQuestions()
-        return
-      }
-      
-      console.log('[Checklist] All questions shuffled:', this.shuffledQuestions.map(q => q.id))
-    },
+interface Props {
+  currentLocale: string
+  texts: any
+}
 
-    /**
-     * 回答に基づいてスコアを加算し、次の質問へ進む
-     * ランダム化された質問でも正しいスコアを計算
-     * @param {number} point - 加算するポイント（1, 3, 5のいずれか）
-     */
-    addPoint(point) {
-      // 1問目：スコアをリセット（質問の再ランダム化は行わない）
-      if (this.currentQuestion === 1) {
-        this.score[0].val = 0
-        this.score[1].val = 0
-        this.score[2].val = 0
-      }
-      
-      // 現在の質問の元のIDを取得
-      const currentQuestionData = this.shuffledQuestions[this.currentQuestion - 1]
-      const originalId = currentQuestionData.id
-      
-      // 元のIDに基づいてスコアを加算
-      if (originalId >= 0 && originalId <= 7) {
-        // 視覚学習（visual）
-        this.score[0].val += point
-      } else if (originalId >= 8 && originalId <= 15) {
-        // 聴覚学習（auditory）
-        this.score[1].val += point
-      } else if (originalId >= 16 && originalId <= 23) {
-        // 触覚・運動感覚学習（tactile）
-        this.score[2].val += point
-      }
-      
-      // 次の質問へ進む
-      this.currentQuestion++
-      
-      // 最後の質問の場合は診断完了
-      if (this.currentQuestion > 24) {
-        this.completeDiagnosis()
-      }
-    },
-    
-    /**
-     * スコアを初期化（リトライ時）
-     */
-    resetScores() {
-      this.score[0].val = 0
-      this.score[1].val = 0
-      this.score[2].val = 0
-      this.currentQuestion = 1
-      // リトライ時は質問を再ランダム化
-      this.shuffleQuestions()
-    },
-    
-    /**
-     * 診断完了時の処理
-     * 親コンポーネントにスコアを送信して結果画面へ遷移
-     */
-    completeDiagnosis() {
-      this.$emit('finish-check', this.score)
+const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  'finish-check': [result: DiagnoseResult]
+}>()
+
+// i18n関数のシミュレーション（既存のtextsから取得）
+const t = (key: string) => {
+  const keys = key.split('.')
+  let value = props.texts
+  for (const k of keys) {
+    value = value?.[k]
+  }
+  return value || key
+}
+
+// 質問データを構築
+const questions = buildQuestions(t)
+const { setAnswer, isComplete, run, reset } = useDiagnosis(questions.length)
+
+// 現在の質問番号（1-24）
+const currentQuestion = ref(1)
+
+// ランダム化された質問順序
+const shuffledQuestions = ref<typeof questions>([])
+
+// 現在選択されている値（A11y用）
+const selectedValue = ref<number | null>(null)
+
+// エラー表示フラグ
+const showError = ref(false)
+
+// 現在表示する質問を取得
+const filteredItems = computed(() => {
+  const currentQuestionData = shuffledQuestions.value[currentQuestion.value - 1]
+  console.log('[Checklist] filteredItems computed:', {
+    currentQuestion: currentQuestion.value,
+    shuffledQuestionsLength: shuffledQuestions.value.length,
+    currentQuestionData
+  })
+  return currentQuestionData ? [currentQuestionData] : []
+})
+
+// 質問をランダム化する
+function shuffleQuestions() {
+  // Fisher-Yatesシャッフルアルゴリズム
+  const shuffleArray = (array: typeof questions) => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
     }
+    return shuffled
+  }
+  
+  // 全24問をランダムに並び替え
+  shuffledQuestions.value = shuffleArray(questions)
+  
+  // 重複チェック
+  const ids = shuffledQuestions.value.map(q => q.id)
+  const uniqueIds = [...new Set(ids)]
+  if (ids.length !== uniqueIds.length) {
+    console.warn('[Checklist] Duplicate questions detected! Re-shuffling...')
+    shuffleQuestions()
+    return
+  }
+  
+  console.log('[Checklist] All questions shuffled:', shuffledQuestions.value.map(q => q.id))
+}
+
+// 回答に基づいてスコアを加算し、次の質問へ進む
+function addPoint(point: number) {
+  // エラーをクリア
+  showError.value = false
+  
+  // 選択された値を記録
+  selectedValue.value = point
+  
+  // 現在の質問の元のIDを取得（0-23のインデックス）
+  const currentQuestionData = shuffledQuestions.value[currentQuestion.value - 1]
+  const originalId = currentQuestionData.id - 1 // 1-24から0-23に変換
+  
+  // coreライブラリのsetAnswerを使用
+  setAnswer(originalId, point)
+  
+  // 次の質問へ進む
+  currentQuestion.value++
+  
+  // 選択状態をリセット
+  selectedValue.value = null
+  
+  // 最後の質問の場合は診断完了
+  if (currentQuestion.value > 24) {
+    completeDiagnosis()
   }
 }
+
+// 診断完了時の処理
+function completeDiagnosis() {
+  const result = run()
+  emit('finish-check', result)
+}
+
+// リトライ時の処理
+function resetScores() {
+  reset()
+  currentQuestion.value = 1
+  shuffleQuestions()
+}
+
+// コンポーネント作成時に質問をランダム化
+onMounted(() => {
+  console.log('[Checklist] Component mounted, questions:', questions)
+  shuffleQuestions()
+  console.log('[Checklist] After shuffle, shuffledQuestions:', shuffledQuestions.value)
+})
+
+// 言語が変更されたときに質問リストを更新
+watch(() => props.texts, () => {
+  const newQuestions = buildQuestions(t)
+  questions.splice(0, questions.length, ...newQuestions)
+  shuffleQuestions()
+}, { deep: true })
+
+// 外部からリセット可能にする
+defineExpose({
+  resetScores
+})
 </script>

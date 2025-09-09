@@ -91,5 +91,35 @@ export default {
   ],
   "buttons": {
     "retry": "最初からやり直す"
+  },
+  "labels": {
+    "type": {
+      "v": "視覚型",
+      "a": "聴覚型", 
+      "t": "触覚型",
+      "va": "視覚・聴覚型",
+      "vt": "視覚・触覚型",
+      "at": "聴覚・触覚型",
+      "all": "バランス型"
+    }
+  },
+  "share": {
+    "message": {
+      "base": "私の学習スタイルは「%TYPE%」でした！あなたも診断してみませんか？"
+    },
+    "tags": "#学習スタイル #診断 #教育",
+    "cta": {
+      "x": "Xでシェア",
+      "line": "LINEでシェア",
+      "wa": "WhatsAppでシェア",
+      "fb": "Facebookでシェア",
+      "copy": "リンクをコピー"
+    }
+  },
+  "common": {
+    "skipToContent": "メインコンテンツにスキップ"
+  },
+  "errors": {
+    "selectOne": "選択してください"
   }
 }
