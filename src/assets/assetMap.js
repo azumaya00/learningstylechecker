@@ -28,3 +28,4 @@ export default {
     "dark": "/images/result-all-dark.svg"
   }
 }
+
