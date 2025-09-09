@@ -85,7 +85,7 @@ export default {
      */
     initializeQuestions() {
       this.questions = this.texts.questions.map((text, index) => ({
-        id: index + 1,
+        id: index, // 0-23のインデックス
         text: text
       }))
     },
@@ -138,13 +138,13 @@ export default {
       const originalId = currentQuestionData.id
       
       // 元のIDに基づいてスコアを加算
-      if (originalId >= 1 && originalId <= 8) {
+      if (originalId >= 0 && originalId <= 7) {
         // 視覚学習（visual）
         this.score[0].val += point
-      } else if (originalId >= 9 && originalId <= 16) {
+      } else if (originalId >= 8 && originalId <= 15) {
         // 聴覚学習（auditory）
         this.score[1].val += point
-      } else if (originalId >= 17 && originalId <= 24) {
+      } else if (originalId >= 16 && originalId <= 23) {
         // 触覚・運動感覚学習（tactile）
         this.score[2].val += point
       }
