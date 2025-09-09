@@ -1,6 +1,6 @@
 <template>
-  <div id="app" class="page">
-    <div class="page__bg"></div>
+  <div id="app" class="page theme-app">
+    <div class="page__bg theme-bg"></div>
     
     <!-- コントロールパネル -->
     <div class="control-panel">
@@ -18,27 +18,30 @@
       </div>
       
       <!-- テーマ切り替え -->
-      <div class="theme-toggle">
+      <div class="theme-toggle flex items-center gap-2">
         <button 
-          :class="{ active: currentTheme === 'legacy-light' }"
-          @click="switchTheme('legacy-light')"
+          class="px-3 py-1 rounded text-sm font-medium transition-colors theme-btn"
+          :class="currentTheme === 'ls-light' ? 'theme-btn-active' : 'theme-btn-inactive'"
+          @click="switchTheme('ls-light')"
           title="ライトテーマ"
         >
-          <i class="fas fa-sun"></i>
+          ☀️
         </button>
         <button 
-          :class="{ active: currentTheme === 'legacy-dark' }"
-          @click="switchTheme('legacy-dark')"
+          class="px-3 py-1 rounded text-sm font-medium transition-colors theme-btn"
+          :class="currentTheme === 'ls-dark' ? 'theme-btn-active' : 'theme-btn-inactive'"
+          @click="switchTheme('ls-dark')"
           title="ダークテーマ"
         >
-          <i class="fas fa-moon"></i>
+          🌙
         </button>
       </div>
     </div>
     
     <main class="l-main">
-      <div class="l-main__container">
+      <div class="l-main__container max-w-screen-md mx-auto">
         <div :class="['l-main__inner', { 'l-main__inner--start': currentPage === 'Start' }]">
+          
           <transition mode="out-in">
             <div :class="{ 'card--hero': currentPage === 'Start' }">
               <component
@@ -58,8 +61,8 @@
       </div>
     </main>
 
-    <footer class="l-footer">
-      <p class="p-footer__text">
+    <footer class="l-footer bg-neutral text-neutral-content py-3 md:py-4">
+      <p class="p-footer__text text-xs md:text-sm text-neutral-content">
         &copy;Copyright{{ currentYear }}
         <a href="https://yuruknowledge.com/" class="p-footer__link">ゆるナレッジfromマレーシア</a>
         .All Rights Reserved
@@ -68,11 +71,34 @@
   </div>
 </template>
 
+<style scoped>
+
+
+/* テーマボタンのスタイル（言語切り替えボタンと同じスタイル） */
+.theme-btn-active {
+  background-color: var(--c-primary, #69c4d0);
+  color: white;
+  border: 1px solid var(--c-primary, #69c4d0);
+}
+
+.theme-btn-inactive {
+  background-color: transparent;
+  color: var(--c-text-muted, #6b7280);
+  border: 1px solid var(--c-border, #e5e7eb);
+}
+
+.theme-btn-inactive:hover {
+  background-color: var(--c-border, #e5e7eb);
+  color: var(--c-text, #403734);
+}
+
+</style>
+
 <script>
 import Start from './components/Start.vue'
 import Checklist from './components/Checklist.vue'
 import Result from './components/Result.vue'
-import { loadTheme, setTheme, getCurrentTheme } from './lib/theme'
+import { useTheme } from './composables/useTheme'
 import { getCurrentLocale, setLocale, AVAILABLE_LOCALES } from './lib/locale'
 import { getTexts } from './lib/i18n'
 // useLocale は Composition API のコンポーザブルのため、Options API では使用しない
@@ -100,7 +126,7 @@ export default {
       // 診断結果
       diagnosisResult: null,
       // 現在のテーマ（初期化時にgetCurrentTheme()で設定される）
-      currentTheme: 'legacy-light',
+      currentTheme: 'ls-light',
       // 現在の言語（初期化時にgetCurrentLocale()で設定される）
       currentLocale: initialLocale,
       // 国際化テキスト
@@ -126,6 +152,12 @@ export default {
   mounted() {
     // アプリケーション初期化
     this.initializeApp()
+    // テーマを再適用（DOMが準備できた後）
+    this.loadInitialTheme()
+    // 少し遅延してテーマを再適用（確実にするため）
+    this.$nextTick(() => {
+      this.loadInitialTheme()
+    })
   },
   methods: {
     /**
@@ -141,19 +173,75 @@ export default {
      * 初回アクセス時はデバイスのテーマ設定を優先し、保存されたテーマがある場合はそれを使用
      */
     loadInitialTheme() {
-      const theme = getCurrentTheme()
-      this.currentTheme = theme
-      setTheme(theme)
+      const saved = localStorage.getItem('ls_theme')
+      if (saved && (saved === 'ls-light' || saved === 'ls-dark')) {
+        this.currentTheme = saved
+      } else {
+        const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches
+        this.currentTheme = prefersDark ? 'ls-dark' : 'ls-light'
+      }
+      
+      // DOMにテーマを適用（強制的に）
+      document.documentElement.setAttribute('data-theme', this.currentTheme)
+      document.documentElement.className = `theme-${this.currentTheme}`
+      
+      // CSS変数を直接設定
+      this.applyThemeColors(this.currentTheme)
+      
+      console.log('[App] Theme applied:', this.currentTheme)
     },
-
 
     /**
      * テーマを切り替え
-     * @param {Theme} theme - 切り替えるテーマ
+     * @param {string} theme - 切り替えるテーマ
      */
     switchTheme(theme) {
+      console.log('[App] Switching theme to:', theme)
       this.currentTheme = theme
-      setTheme(theme)
+      document.documentElement.setAttribute('data-theme', theme)
+      document.documentElement.className = `theme-${theme}`
+      localStorage.setItem('ls_theme', theme)
+      
+      // CSS変数を直接設定
+      this.applyThemeColors(theme)
+      
+      console.log('[App] Theme applied to DOM:', document.documentElement.getAttribute('data-theme'))
+    },
+
+    /**
+     * テーマの色を直接適用
+     * @param {string} theme - 適用するテーマ
+     */
+    applyThemeColors(theme) {
+      const root = document.documentElement
+      
+      if (theme === 'ls-light') {
+        // ライトモード：既存のCSS変数をクリア（デフォルト値を使用）
+        root.style.removeProperty('--c-bg')
+        root.style.removeProperty('--c-text')
+        root.style.removeProperty('--c-primary')
+        root.style.removeProperty('--c-secondary')
+        root.style.removeProperty('--c-accent')
+        root.style.removeProperty('--c-border')
+        root.style.removeProperty('--c-card')
+        root.style.removeProperty('--c-card-text')
+      } else {
+        // ダークモード：既存のCSS変数を上書き
+        root.style.setProperty('--c-bg', '#1a1a1a')
+        root.style.setProperty('--c-text', '#e5e7eb')
+        root.style.setProperty('--c-primary', '#69c4d0')
+        root.style.setProperty('--c-secondary', '#9E7E9F')
+        root.style.setProperty('--c-accent', '#c14f7e')
+        root.style.setProperty('--c-border', '#374151')
+        root.style.setProperty('--c-card', 'rgba(30, 30, 30, 0.9)')
+        root.style.setProperty('--c-card-text', '#e5e7eb')
+      }
+      
+      // クラスと属性を設定
+      root.className = `theme-${theme}`
+      root.setAttribute('data-theme', theme)
+      
+      console.log('[App] Theme colors applied:', theme)
     },
 
     /**

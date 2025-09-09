@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import App from './App.vue'
+import './assets/main.css'
 import './styles.css'
 import './styles/a11y.css'
 

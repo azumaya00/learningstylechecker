@@ -94,3 +94,4 @@ for (const type of TYPES) {
 
 console.log('\nNote: SVG files generated. For production, convert to PNG using:')
 console.log('npx svg2png-cli public/og/*.svg --outdir public/og --width 1200 --height 630')
+

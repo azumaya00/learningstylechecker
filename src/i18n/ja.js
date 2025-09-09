@@ -121,5 +121,8 @@ export default {
   },
   "errors": {
     "selectOne": "選択してください"
+  },
+  "progress": {
+    "label": "質問の進捗状況"
   }
 }

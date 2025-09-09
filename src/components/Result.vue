@@ -1,6 +1,6 @@
 <template>
-  <div class="p-result" id="main">
-    <h1 class="p-result__title">Result</h1>
+  <div class="p-result bg-base-100" id="main">
+    <h1 class="p-result__title text-2xl md:text-3xl font-extrabold tracking-wide">Result</h1>
     <div class="p-result__container" aria-live="polite" aria-atomic="true">
       <!-- キャライラスト表示 -->
       <div class="result-hero">
@@ -13,26 +13,26 @@
       </div>
       
       <div class="p-result__diagnosis">
-        <h2 class="p-result__diagnosis__title">{{ texts.results?.diagnosisTitle || 'あなたは' }}<span>{{ currentResult.title }}</span>{{ texts.results?.diagnosisSuffix || 'タイプです！' }}</h2>
-        <p v-html="currentResult.description" class="p-result__diagnosis__text"></p>
+        <div class="px-6 py-4 rounded-lg bg-gradient-to-r from-primary/10 to-secondary/10 text-center">
+          <h2 class="p-result__diagnosis__title text-xl font-bold leading-relaxed">{{ texts.results?.diagnosisTitle || 'あなたは' }}<span class="text-primary">{{ currentResult.title }}</span>{{ texts.results?.diagnosisSuffix || 'タイプです！' }}</h2>
+        </div>
+        <p v-html="currentResult.description" class="p-result__diagnosis__text leading-relaxed tracking-wide mt-6 text-base-content/90"></p>
       </div>
-      <div class="p-result__score">
+      <div class="p-result__score bg-base-200 rounded-lg p-4">
         <h3 class="p-result__score__title">{{ texts.results?.scoreTitle || 'score' }}</h3>
         <table class="p-result__score__table">
           <tbody>
             <tr>
               <td class="p-result__score__table__column">{{ texts.results?.visualLabel || '視覚' }}:</td>
-              <td class="p-result__score__table__column">{{ result.scores.v }}{{ texts.results?.pointsSuffix || '点' }}</td>
+              <td class="p-result__score__table__column text-base-content/90 font-semibold">{{ result.scores.v }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
             <tr>
               <td class="p-result__score__table__column">{{ texts.results?.auditoryLabel || '聴覚' }}:</td>
-              <td class="p-result__score__table__column">{{ result.scores.a }}{{ texts.results?.pointsSuffix || '点' }}</td>
+              <td class="p-result__score__table__column text-base-content/90 font-semibold">{{ result.scores.a }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
             <tr>
-              <td class="p-result__score__table__column">
-                <span>{{ texts.results?.tactileLabel || '触覚・運動感覚' }}:&nbsp;</span>
-              </td>
-              <td class="p-result__score__table__column">{{ result.scores.t }}{{ texts.results?.pointsSuffix || '点' }}</td>
+              <td class="p-result__score__table__column">{{ texts.results?.tactileLabel || '触覚・運動感覚' }}:</td>
+              <td class="p-result__score__table__column text-base-content/90 font-semibold">{{ result.scores.t }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
           </tbody>
         </table>

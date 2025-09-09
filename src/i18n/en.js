@@ -121,5 +121,8 @@ export default {
     },
     "errors": {
         "selectOne": "Please select one"
+    },
+    "progress": {
+        "label": "Progress"
     }
 }

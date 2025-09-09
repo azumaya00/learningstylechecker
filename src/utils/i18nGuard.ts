@@ -16,3 +16,4 @@ export function useI18nGuard(t: (key: string) => string) {
   }
   return { tq, trTitle, trDesc }
 }
+

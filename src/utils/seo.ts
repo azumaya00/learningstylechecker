@@ -14,3 +14,4 @@ function setMeta(attr:'name'|'property', key:string, value:string) {
   if (!el) { el = document.createElement('meta'); el.setAttribute(attr, key); document.head.appendChild(el) }
   el.setAttribute('content', value)
 }
+

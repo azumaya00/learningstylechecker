@@ -62,3 +62,4 @@ export const AVAILABLE_LOCALES: { code: Locale; name: string; flag: string }[] =
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
   { code: 'en', name: 'English', flag: '🇺🇸' }
 ]
+

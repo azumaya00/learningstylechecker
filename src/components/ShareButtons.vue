@@ -251,6 +251,8 @@ export default {
   background: var(--c-card);
   color: var(--c-text);
   border-color: var(--c-border);
+  min-width: 0; /* グリッドで均等に配置 */
+  white-space: nowrap; /* テキストの改行を防ぐ */
 }
 
 .share-btn--copy:hover {

@@ -44,3 +44,4 @@ export function getTextByPath(texts: I18nTexts, keyPath: string): string {
   
   return typeof value === 'string' ? value : keyPath
 }
+
