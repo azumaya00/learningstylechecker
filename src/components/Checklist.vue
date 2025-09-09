@@ -19,16 +19,24 @@
 </template>
 
 <script>
+/**
+ * チェックリスト画面コンポーネント
+ * 24問の質問を順次表示し、ユーザーの回答に基づいてスコアを計算
+ * 視覚・聴覚・触覚・運動感覚の3つの学習スタイルを診断
+ */
 export default {
   name: 'Checklist',
   data() {
     return {
+      // 現在の質問番号（1-24）
       currentQuestion: 1,
+      // 各学習スタイルのスコア
       score: [
-        { type: 'visual', val: 0 },
-        { type: 'auditory', val: 0 },
-        { type: 'tactile', val: 0 }
+        { type: 'visual', val: 0 },      // 視覚学習
+        { type: 'auditory', val: 0 },    // 聴覚学習
+        { type: 'tactile', val: 0 }      // 触覚・運動感覚学習
       ],
+      // 診断用の質問リスト
       questions: [
         {
           id: 1,
@@ -109,42 +117,74 @@ export default {
     }
   },
   computed: {
-    // フィルタした質問を表示
+    /**
+     * 現在表示する質問をフィルタリング
+     * @returns {Array} 現在の質問番号に該当する質問オブジェクトの配列
+     */
     filteredItems() {
       return this.searchItem(this.questions, this.currentQuestion)
     }
   },
   methods: {
-    // 現在の質問のみを取り出す
-    searchItem(list, key) {
-      return list.filter(function(question) {
-        return question.id === key
-      })
+    /**
+     * 指定されたIDの質問を取得
+     * @param {Array} questionList - 質問リスト
+     * @param {number} questionId - 取得する質問のID
+     * @returns {Array} 該当する質問オブジェクトの配列
+     */
+    searchItem(questionList, questionId) {
+      return questionList.filter(question => question.id === questionId)
     },
-    // 点数加算
-    // 1問目でリトライ時の値をリセット
-    // 24問目で結果画面へ遷移
+    
+    /**
+     * 回答に基づいてスコアを加算し、次の質問へ進む
+     * 質問の範囲に応じて適切な学習スタイルのスコアに加算
+     * @param {number} point - 加算するポイント（1, 3, 5のいずれか）
+     */
     addPoint(point) {
+      // 1問目：スコアをリセットして視覚学習に加算
       if (this.currentQuestion === 1) {
-        this.score[0].val = 0
-        this.score[1].val = 0
-        this.score[2].val = 0
+        this.resetScores()
         this.score[0].val += point
         this.currentQuestion++
-      } else if (this.currentQuestion <= 8) {
+      }
+      // 2-8問目：視覚学習（visual）
+      else if (this.currentQuestion <= 8) {
         this.score[0].val += point
         this.currentQuestion++
-      } else if (this.currentQuestion <= 16) {
+      }
+      // 9-16問目：聴覚学習（auditory）
+      else if (this.currentQuestion <= 16) {
         this.score[1].val += point
         this.currentQuestion++
-      } else if (this.currentQuestion <= 23) {
+      }
+      // 17-23問目：触覚・運動感覚学習（tactile）
+      else if (this.currentQuestion <= 23) {
         this.score[2].val += point
         this.currentQuestion++
-      } else if (this.currentQuestion === 24) {
-        this.score[2].val += point
-        // 親にscoreを渡す
-        this.$emit('finish-check', this.score)
       }
+      // 24問目：最後の質問、診断完了
+      else if (this.currentQuestion === 24) {
+        this.score[2].val += point
+        this.completeDiagnosis()
+      }
+    },
+    
+    /**
+     * スコアを初期化（リトライ時）
+     */
+    resetScores() {
+      this.score[0].val = 0
+      this.score[1].val = 0
+      this.score[2].val = 0
+    },
+    
+    /**
+     * 診断完了時の処理
+     * 親コンポーネントにスコアを送信して結果画面へ遷移
+     */
+    completeDiagnosis() {
+      this.$emit('finish-check', this.score)
     }
   }
 }

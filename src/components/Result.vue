@@ -2,6 +2,15 @@
   <div class="p-result">
     <h1 class="p-result__title">Result</h1>
     <div class="p-result__container">
+      <!-- キャライラスト表示 -->
+      <div class="result-hero">
+        <img 
+          :src="resultImage" 
+          :alt="`診断結果: ${resultDiagnosis}`"
+          loading="lazy"
+        />
+      </div>
+      
       <div class="p-result__diagnosis">
         <ul>
           <li v-for="(result, index) in filteredResults" :key="result.id">
@@ -40,15 +49,27 @@
 </template>
 
 <script>
+/**
+ * 結果画面コンポーネント
+ * 診断結果を表示し、学習スタイルに応じたアドバイスを提供
+ * スコアに基づいて適切な学習タイプを判定
+ */
 export default {
   name: 'Result',
   props: {
-    score: Array
+    // 親コンポーネントから受け取るスコア配列
+    score: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
+      // 判定された学習タイプ
       selectedType: 'all',
+      // シェア用の診断結果テキスト
       shareResult: '',
+      // 学習タイプ別の診断結果とアドバイス
       results: [
         {
           id: 'v',
@@ -90,81 +111,100 @@ export default {
           id: 'all',
           diagnosis: '全部盛り',
           text:
-            'なに・・？差が付かないだと・・！？<br>そんなあなたにおすすめなのは、ズバリ！筋トレです！！<br>筋肉は世界を救います！さあプロテインを盛ってスクワットから始めましょう！！<br>（※ネタです。この診断では判断がつきませんので、一番点数の高いタイプから試してみましょう)'
+            'なに？差が付かないだと……！？<br>そんなあなたにおすすめなのは、ズバリ！筋トレです！！<br>筋肉は世界を救います！さあプロテインを盛ってスクワットから始めましょう！！<br>（※ネタです。この診断では判断がつきませんので、一番点数の高いタイプから試してみましょう)'
         }
       ]
     }
   },
   computed: {
-    // 当てはまる結果を表示
+    /**
+     * 選択された学習タイプに該当する結果を取得
+     * @returns {Array} 該当する診断結果オブジェクトの配列
+     */
     filteredResults() {
-      return this.searchResult(this.results, this.selectedType)
+      return this.getResultByType(this.results, this.selectedType)
+    },
+
+    /**
+     * 結果画像のパスを取得
+     * @returns {string} 結果画像のURL
+     */
+    resultImage() {
+      return `/images/result-${this.selectedType}.svg`
+    },
+
+    /**
+     * 結果診断名を取得
+     * @returns {string} 診断名
+     */
+    resultDiagnosis() {
+      const result = this.getResultByType(this.results, this.selectedType)
+      return result[0]?.diagnosis || '不明'
     }
   },
   created() {
-    // 結果の判定
-    // 変数定義
-    var vision = this.score[0].val
-    var auditory = this.score[1].val
-    var tactile = this.score[2].val
-
-    // ある値が他の物より5以上多いときは単独タイプ
-    if (vision >= auditory + 5 && vision >= tactile + 5) {
-      this.selectedType = 'v'
-    } else if (auditory >= vision + 5 && auditory >= tactile + 5) {
-      this.selectedType = 'a'
-    } else if (tactile >= vision + 5 && tactile >= auditory + 5) {
-      this.selectedType = 't'
-
-      // 2つの要素が残り一つより5以上多く、2つの差が5未満の時は複合タイプ
-    } else if (
-      vision >= tactile + 5 &&
-      auditory >= tactile + 5 &&
-      Math.abs(vision - auditory) < 5
-    ) {
-      this.selectedType = 'va'
-    } else if (
-      vision >= auditory + 5 &&
-      tactile >= auditory + 5 &&
-      Math.abs(vision - tactile) < 5
-    ) {
-      this.selectedType = 'vt'
-    } else if (
-      tactile >= vision + 5 &&
-      auditory >= vision + 5 &&
-      Math.abs(tactile - auditory) < 5
-    ) {
-      this.selectedType = 'at'
-
-      // 全ての差が5未満の時は全部盛りタイプ
-    } else if (
-      Math.abs(vision - auditory) < 5 &&
-      Math.abs(tactile - vision) < 5 &&
-      Math.abs(tactile - auditory) < 5
-    ) {
-      this.selectedType = 'all'
-    } else {
-      console.log('式がおかしいよ！')
-    }
-
-    const self = this
-    // シェア用診断名を取り出す
-    const shareItem = this.results.filter(function(item) {
-      return item.id === self.selectedType
-    })
-    this.shareResult = shareItem[0].diagnosis
-
-    // 診断名を親に送る
-    this.$emit('share-diagnosis', this.shareResult)
+    // コンポーネント作成時に学習タイプを判定
+    this.determineLearningType()
+    this.setupShareResult()
   },
   methods: {
-    // 当てはまる結果のみを抽出
-    searchResult(list, key) {
-      return list.filter(function(result) {
-        return result.id === key
-      })
+    /**
+     * スコアに基づいて学習タイプを判定
+     * 各学習スタイルのスコアを比較して適切なタイプを決定
+     */
+    determineLearningType() {
+      const vision = this.score[0].val
+      const auditory = this.score[1].val
+      const tactile = this.score[2].val
+
+      // 単独タイプの判定（5点以上の差がある場合）
+      if (vision >= auditory + 5 && vision >= tactile + 5) {
+        this.selectedType = 'v' // 視覚タイプ
+      } else if (auditory >= vision + 5 && auditory >= tactile + 5) {
+        this.selectedType = 'a' // 聴覚タイプ
+      } else if (tactile >= vision + 5 && tactile >= auditory + 5) {
+        this.selectedType = 't' // 触覚・運動感覚タイプ
+      }
+      // 複合タイプの判定
+      else if (vision >= tactile + 5 && auditory >= tactile + 5 && Math.abs(vision - auditory) < 5) {
+        this.selectedType = 'va' // 視覚＆聴覚タイプ
+      } else if (vision >= auditory + 5 && tactile >= auditory + 5 && Math.abs(vision - tactile) < 5) {
+        this.selectedType = 'vt' // 視覚＆触覚・運動感覚タイプ
+      } else if (tactile >= vision + 5 && auditory >= vision + 5 && Math.abs(tactile - auditory) < 5) {
+        this.selectedType = 'at' // 聴覚＆触覚・運動感覚タイプ
+      }
+      // 全部盛りタイプ（全ての差が5未満）
+      else if (Math.abs(vision - auditory) < 5 && Math.abs(tactile - vision) < 5 && Math.abs(tactile - auditory) < 5) {
+        this.selectedType = 'all' // 全部盛りタイプ
+      } else {
+        console.warn('学習タイプの判定で予期しない結果が発生しました')
+        this.selectedType = 'all' // フォールバック
+      }
     },
-    // リトライボタンでスタート画面へ
+
+    /**
+     * シェア用の診断結果を設定
+     */
+    setupShareResult() {
+      const shareItem = this.getResultByType(this.results, this.selectedType)
+      this.shareResult = shareItem[0]?.diagnosis || '不明'
+      this.$emit('share-diagnosis', this.shareResult)
+    },
+
+    /**
+     * 指定されたタイプの結果を取得
+     * @param {Array} resultList - 結果リスト
+     * @param {string} typeId - 取得するタイプのID
+     * @returns {Array} 該当する結果オブジェクトの配列
+     */
+    getResultByType(resultList, typeId) {
+      return resultList.filter(result => result.id === typeId)
+    },
+
+    /**
+     * リトライボタンクリック時の処理
+     * 親コンポーネントにリトライイベントを送信
+     */
     clickRetry() {
       this.$emit('retry-check')
     }
