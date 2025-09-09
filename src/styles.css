@@ -103,8 +103,8 @@ table {
   /* 背景画像は削除 - シンプルな背景色のみ使用 */
 
   /* === Card Hero Background Images === */
-  --card-hero-mobile: url('/images/start-card-mobile.svg');
-  --card-hero-desktop: url('/images/start-card-desktop.svg');
+  --card-hero-mobile: url('/images/start-card-mobile-light.svg');
+  --card-hero-desktop: url('/images/start-card-desktop-light.svg');
 
   /* === Color Palette - Legacy Light Theme === */
   --c-bg: #f8f9fa;                    /* 背景色 */
@@ -141,6 +141,10 @@ table {
   --c-success: #34d399;               /* ダーク成功色 */
   --c-warning: #fbbf24;               /* ダーク警告色 */
   --c-error: #f87171;                 /* ダークエラー色 */
+  
+  /* === Card Hero Background Images (Dark Theme) === */
+  --card-hero-mobile: url('/images/start-card-mobile-dark.svg');
+  --card-hero-desktop: url('/images/start-card-desktop-dark.svg');
 }
 
 /* ========================================
@@ -693,34 +697,65 @@ l-footer
    ======================================== */
 .theme-toggle {
   position: fixed;
-  top: var(--space-4);
-  right: var(--space-4);
+  top: var(--space-2);
+  right: var(--space-2);
   z-index: 1000;
   background: var(--c-card);
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  backdrop-filter: blur(10px);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  gap: 1px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.theme-toggle:hover {
+  opacity: 1;
 }
 
 .theme-toggle button {
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-1) var(--space-2);
   background: transparent;
   border: none;
-  color: var(--c-text);
-  font-size: var(--fs-sm);
+  color: var(--c-text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: all 0.2s ease;
+  min-width: 32px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-toggle button:hover {
   background: var(--c-border);
+  color: var(--c-text);
 }
 
 .theme-toggle button.active {
   background: var(--c-primary);
   color: #ffffff;
+}
+
+/* モバイルでの調整 */
+@media (max-width: 767px) {
+  .theme-toggle {
+    top: var(--space-1);
+    right: var(--space-1);
+  }
+  
+  .theme-toggle button {
+    padding: var(--space-1);
+    font-size: 0.7rem;
+    min-width: 28px;
+    min-height: 24px;
+  }
 }
 
 /* ========================================

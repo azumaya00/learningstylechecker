@@ -13,7 +13,7 @@
       
       <div class="p-result__diagnosis">
         <ul>
-          <li v-for="(result, index) in filteredResults" :key="result.id">
+          <li v-for="result in filteredResults" :key="result.id">
             <h2 class="p-result__diagnosis__title">あなたは<span>{{ result.diagnosis }}</span>タイプです！</h2>
             <p v-html="result.text" class="p-result__diagnosis__text">
             </p>
@@ -49,10 +49,14 @@
 </template>
 
 <script>
+import { pickIllust, debugContentPack } from '../lib/assetResolver'
+import { loadAssetMap } from '../lib/dataLoader'
+
 /**
  * 結果画面コンポーネント
  * 診断結果を表示し、学習スタイルに応じたアドバイスを提供
  * スコアに基づいて適切な学習タイプを判定
+ * 新しいアセット解決システムを使用してイラストを選択
  */
 export default {
   name: 'Result',
@@ -60,6 +64,11 @@ export default {
     // 親コンポーネントから受け取るスコア配列
     score: {
       type: Array,
+      required: true
+    },
+    // 現在のテーマ
+    currentTheme: {
+      type: String,
       required: true
     }
   },
@@ -69,6 +78,12 @@ export default {
       selectedType: 'all',
       // シェア用の診断結果テキスト
       shareResult: '',
+      // 選択された画像ID
+      selectedImageId: '',
+      // 現在の画像パス
+      currentImagePath: '',
+      // アセットマップ
+      assetMap: null,
       // 学習タイプ別の診断結果とアドバイス
       results: [
         {
@@ -127,10 +142,11 @@ export default {
 
     /**
      * 結果画像のパスを取得
+     * テーマに応じてlight/dark画像を選択
      * @returns {string} 結果画像のURL
      */
     resultImage() {
-      return `/images/result-${this.selectedType}.svg`
+      return this.currentImagePath || `/images/result-${this.selectedType}.svg`
     },
 
     /**
@@ -142,12 +158,93 @@ export default {
       return result[0]?.diagnosis || '不明'
     }
   },
+  watch: {
+    /**
+     * テーマ変更を監視
+     * テーマが変更されたときに画像パスを更新
+     */
+    currentTheme() {
+      console.log('[Result] Theme changed to:', this.currentTheme)
+      this.updateImagePath()
+    }
+  },
   created() {
     // コンポーネント作成時に学習タイプを判定
     this.determineLearningType()
+    this.initializeAssets()
     this.setupShareResult()
+    
+    // デバッグ用: コンテンツパックの設定を出力
+    if (import.meta.env.DEV) {
+      debugContentPack()
+    }
+  },
+  
+  beforeUnmount() {
+    // クリーンアップ処理（現在は不要）
   },
   methods: {
+    /**
+     * アセットを初期化
+     * 画像IDを選択し、テーマに応じた画像パスを設定
+     */
+    initializeAssets() {
+      try {
+        console.log('[Result] Initializing assets for type:', this.selectedType)
+        
+        // アセットマップを読み込み
+        this.assetMap = loadAssetMap()
+        console.log('[Result] Asset map loaded:', this.assetMap)
+        
+        // 診断結果のIDをそのまま画像IDとして使用
+        this.selectedImageId = pickIllust(this.selectedType)
+        console.log('[Result] Selected image ID:', this.selectedImageId)
+        
+        // テーマに応じた画像パスを設定
+        this.updateImagePath()
+        
+        // テーマ変更はwatchで監視するため、ここでは設定しない
+        
+      } catch (error) {
+        console.error('[Result] Failed to initialize assets:', error)
+        console.error('[Result] Error details:', error.stack)
+        
+        // フォールバック: 従来のSVGファイルを使用
+        this.selectedImageId = this.selectedType
+        this.currentImagePath = `/images/result-${this.selectedType}.svg`
+        console.log('[Result] Using fallback image:', this.currentImagePath)
+      }
+    },
+
+    /**
+     * 画像パスを更新
+     * 現在のテーマに応じてlight/dark画像を選択
+     */
+    updateImagePath() {
+      console.log('[Result] Updating image path, assetMap:', !!this.assetMap, 'selectedImageId:', this.selectedImageId)
+      
+      if (!this.assetMap || !this.selectedImageId) {
+        console.warn('[Result] Missing assetMap or selectedImageId, using fallback')
+        this.currentImagePath = `/images/result-${this.selectedType}.svg`
+        return
+      }
+      
+      const asset = this.assetMap[this.selectedImageId]
+      console.log('[Result] Asset for ID', this.selectedImageId, ':', asset)
+      
+      if (!asset) {
+        console.warn('[Result] Asset not found for ID:', this.selectedImageId)
+        this.currentImagePath = `/images/result-${this.selectedType}.svg`
+        return
+      }
+      
+      // 現在のテーマに応じて画像を選択
+      const isDark = this.currentTheme === 'legacy-dark'
+      this.currentImagePath = isDark ? asset.dark : asset.light
+      
+      console.log('[Result] Updated image path:', this.currentImagePath, '(isDark:', isDark, ', theme:', this.currentTheme, ')')
+    },
+
     /**
      * スコアに基づいて学習タイプを判定
      * 各学習スタイルのスコアを比較して適切なタイプを決定
