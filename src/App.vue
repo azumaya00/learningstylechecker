@@ -2,20 +2,38 @@
   <div id="app" class="page">
     <div class="page__bg"></div>
     
-    <!-- テーマ切替UI -->
-    <div class="theme-toggle">
-      <button 
-        :class="{ active: currentTheme === 'legacy-light' }"
-        @click="switchTheme('legacy-light')"
-      >
-        ライト
-      </button>
-      <button 
-        :class="{ active: currentTheme === 'legacy-dark' }"
-        @click="switchTheme('legacy-dark')"
-      >
-        ダーク
-      </button>
+    <!-- コントロールパネル -->
+    <div class="control-panel">
+      <!-- 言語切り替え -->
+      <div class="locale-toggle">
+        <button 
+          v-for="locale in availableLocales"
+          :key="locale.code"
+          :class="{ active: currentLocale === locale.code }"
+          @click="switchLocale(locale.code)"
+          :title="locale.name"
+        >
+          {{ locale.flag }}
+        </button>
+      </div>
+      
+      <!-- テーマ切り替え -->
+      <div class="theme-toggle">
+        <button 
+          :class="{ active: currentTheme === 'legacy-light' }"
+          @click="switchTheme('legacy-light')"
+          title="ライトテーマ"
+        >
+          <i class="fas fa-sun"></i>
+        </button>
+        <button 
+          :class="{ active: currentTheme === 'legacy-dark' }"
+          @click="switchTheme('legacy-dark')"
+          title="ダークテーマ"
+        >
+          <i class="fas fa-moon"></i>
+        </button>
+      </div>
     </div>
     
     <main class="l-main">
@@ -27,29 +45,14 @@
                 :is="currentPage"
                 :score="score"
                 :current-theme="currentTheme"
+                :current-locale="currentLocale"
+                :texts="texts"
                 @start-check="moveCheck"
                 @finish-check="moveResult"
                 @retry-check="moveStart"
-                @share-diagnosis="createShareLink"
               />
             </div>
           </transition>
-        </div>
-        <!-- container end -->
-      </div>
-      <div class="l-share" v-if="isShare">
-        <div class="l-share__container">
-          <p class="l-share__text">{{ texts.share.text }}</p>
-          <div class="c-btn__group">
-            <!-- twitterボタン -->
-            <span @click="popupWindow(twitterUrl)" class="c-btn c-btn--small c-btn--twitter">
-              <i class="fab fa-twitter l-share__icon"></i>{{ texts.share.twitter }}
-            </span>
-            <!-- FBボタン -->
-            <span @click="popupWindow(fbUrl)" class="c-btn c-btn--small c-btn--facebook">
-              <i class="fab fa-facebook-f l-share__icon"></i>{{ texts.share.facebook }}
-            </span>
-          </div>
         </div>
         <!-- container end -->
       </div>
@@ -70,7 +73,8 @@ import Start from './components/Start.vue'
 import Checklist from './components/Checklist.vue'
 import Result from './components/Result.vue'
 import { loadTheme, setTheme, getCurrentTheme } from './lib/theme'
-import ja from './i18n/ja.js'
+import { getCurrentLocale, setLocale, AVAILABLE_LOCALES } from './lib/locale'
+import { getTexts } from './lib/i18n'
 
 /**
  * メインアプリケーションコンポーネント
@@ -84,21 +88,23 @@ export default {
     Result
   },
   data() {
+    // 初期化時に言語とテキストを設定
+    const initialLocale = getCurrentLocale()
+    const initialTexts = getTexts(initialLocale)
+    
     return {
       // 現在表示中のページコンポーネント名
       currentPage: 'Start',
       // 診断結果のスコア配列
       score: [],
-      // シェア機能の表示状態
-      isShare: false,
-      // Twitterシェア用URL
-      twitterUrl: '',
-      // Facebookシェア用URL
-      fbUrl: '',
       // 現在のテーマ（初期化時にgetCurrentTheme()で設定される）
       currentTheme: 'legacy-light',
+      // 現在の言語（初期化時にgetCurrentLocale()で設定される）
+      currentLocale: initialLocale,
       // 国際化テキスト
-      texts: ja
+      texts: initialTexts,
+      // 利用可能な言語一覧
+      availableLocales: AVAILABLE_LOCALES
     }
   },
   computed: {
@@ -113,6 +119,7 @@ export default {
   created() {
     // テーマを早期に設定（フラッシュを防ぐ）
     this.loadInitialTheme()
+    // 言語は既にdata()で初期化済み
   },
   mounted() {
     // アプリケーション初期化
@@ -137,6 +144,7 @@ export default {
       setTheme(theme)
     },
 
+
     /**
      * テーマを切り替え
      * @param {Theme} theme - 切り替えるテーマ
@@ -144,6 +152,16 @@ export default {
     switchTheme(theme) {
       this.currentTheme = theme
       setTheme(theme)
+    },
+
+    /**
+     * 言語を切り替え
+     * @param {string} locale - 切り替える言語
+     */
+    switchLocale(locale) {
+      this.currentLocale = locale
+      this.texts = getTexts(locale)
+      setLocale(locale)
     },
 
 
@@ -165,7 +183,6 @@ export default {
     moveResult(score) {
       this.score = score
       this.currentPage = 'Result'
-      this.isShare = true
       // ページの最上部にスクロール
       window.scrollTo({ top: 0, behavior: 'smooth' })
     },
@@ -176,38 +193,10 @@ export default {
      */
     moveStart() {
       this.currentPage = 'Start'
-      this.isShare = false
       // ページの最上部にスクロール
       window.scrollTo({ top: 0, behavior: 'smooth' })
     },
 
-    /**
-     * シェアリンクを生成
-     * TwitterとFacebook用のシェアURLを作成
-     * @param {string} shareResult - シェア用の診断結果テキスト
-     */
-    createShareLink(shareResult) {
-      const shareText = `あなたの学習タイプは「${shareResult}タイプ」でした！`
-      const shareUrl = location.href
-      
-      // TwitterシェアURL生成
-      this.twitterUrl = `https://twitter.com/share?text=${encodeURIComponent(shareText)}&hashtags=学習タイプ診断&url=${encodeURIComponent(shareUrl)}`
-      
-      // FacebookシェアURL生成
-      this.fbUrl = `https://www.facebook.com/share.php?u=${encodeURIComponent(shareUrl)}`
-    },
-
-    /**
-     * シェア用ポップアップウィンドウを開く
-     * @param {string} url - 開くURL
-     */
-    popupWindow(url) {
-      window.open(
-        url,
-        'share',
-        'width=580,height=400,menubar=no,toolbar=no,scrollbars=yes,resizable=yes'
-      )
-    }
   }
 }
 </script>

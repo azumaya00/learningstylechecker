@@ -693,13 +693,25 @@ l-footer
 }
 
 /* ========================================
-   Theme Toggle UI
+   Control Panel UI
    ======================================== */
-.theme-toggle {
+.control-panel {
   position: fixed;
   top: var(--space-2);
   right: var(--space-2);
   z-index: 1000;
+  display: flex;
+  gap: var(--space-2);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.control-panel:hover {
+  opacity: 1;
+}
+
+/* 言語切り替え */
+.locale-toggle {
   background: var(--c-card);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
@@ -708,12 +720,45 @@ l-footer
   -webkit-backdrop-filter: blur(8px);
   display: flex;
   gap: 1px;
-  opacity: 0.8;
-  transition: opacity 0.2s ease;
 }
 
-.theme-toggle:hover {
-  opacity: 1;
+.locale-toggle button {
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--c-text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  min-width: 36px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.locale-toggle button:hover {
+  background: var(--c-border);
+  color: var(--c-text);
+}
+
+.locale-toggle button.active {
+  background: var(--c-primary);
+  color: #ffffff;
+}
+
+/* テーマ切り替え */
+.theme-toggle {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  gap: 1px;
 }
 
 .theme-toggle button {
@@ -745,9 +790,17 @@ l-footer
 
 /* モバイルでの調整 */
 @media (max-width: 767px) {
-  .theme-toggle {
+  .control-panel {
     top: var(--space-1);
     right: var(--space-1);
+    gap: var(--space-1);
+  }
+  
+  .locale-toggle button {
+    padding: var(--space-1);
+    font-size: 0.8rem;
+    min-width: 32px;
+    min-height: 24px;
   }
   
   .theme-toggle button {

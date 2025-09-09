@@ -33,7 +33,10 @@ export default {
   "choices": {
     "visual": "図や絵、動画を見る",
     "auditory": "音声や音楽を聞く",
-    "tactile": "実際に手を動かして体験する"
+    "tactile": "実際に手を動かして体験する",
+    "always": "いつもそうだ",
+    "sometimes": "時々そうだ",
+    "rarely": "めったにない"
   },
   "resultsLabels": {
     "v": "視覚タイプ",
@@ -45,6 +48,13 @@ export default {
     "all": "全部盛りタイプ"
   },
   "results": {
+    "diagnosisTitle": "あなたは",
+    "diagnosisSuffix": "タイプです！",
+    "scoreTitle": "スコア",
+    "visualLabel": "視覚",
+    "auditoryLabel": "聴覚",
+    "tactileLabel": "触覚・運動感覚",
+    "pointsSuffix": "点",
     "v": {
       "title": "視覚",
       "description": "このタイプは基本的に本や図形など「目で見る形」で学ぶと理解しやすくなります。良質な教科書や参考書、テキスト系のWebサイトを活用しましょう！<br>(なお聴覚の数値が15点以下の場合は、動画で学ぶ事が難しいです)"
@@ -71,7 +81,7 @@ export default {
     },
     "all": {
       "title": "全部盛り",
-      "description": "なに・・？差が付かないだと・・！？<br>そんなあなたにおすすめなのは、ズバリ！筋トレです！！<br>筋肉は世界を救います！さあプロテインを盛ってスクワットから始めましょう！！<br>（※ネタです。この診断では判断がつきませんので、一番点数の高いタイプから試してみましょう)"
+      "description": "なに？差が付かないだと……！？<br>そんなあなたにおすすめなのは、ズバリ！筋トレです！！<br>筋肉は世界を救います！さあプロテインを盛ってスクワットから始めましょう！！<br>（※ネタです。この診断では判断がつきませんので、一番点数の高いタイプから試してみましょう)"
     }
   },
   "notices": [
@@ -80,12 +90,6 @@ export default {
     "複数の学習方法を組み合わせることをお勧めします。"
   ],
   "buttons": {
-    "retry": "最初からやり直す",
-    "share": "シェアする"
-  },
-  "share": {
-    "text": "気に入ったらシェアしてね！",
-    "twitter": "Twitterでシェア",
-    "facebook": "Facebookでシェア"
+    "retry": "最初からやり直す"
   }
 }

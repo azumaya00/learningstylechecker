@@ -12,33 +12,36 @@
       </div>
       
       <div class="p-result__diagnosis">
-        <h2 class="p-result__diagnosis__title">あなたは<span>{{ currentResult.title }}</span>タイプです！</h2>
+        <h2 class="p-result__diagnosis__title">{{ texts.results?.diagnosisTitle || 'あなたは' }}<span>{{ currentResult.title }}</span>{{ texts.results?.diagnosisSuffix || 'タイプです！' }}</h2>
         <p v-html="currentResult.description" class="p-result__diagnosis__text"></p>
       </div>
       <div class="p-result__score">
-        <h3 class="p-result__score__title">score</h3>
+        <h3 class="p-result__score__title">{{ texts.results?.scoreTitle || 'score' }}</h3>
         <table class="p-result__score__table">
           <tbody>
             <tr>
-              <td class="p-result__score__table__column">視覚:</td>
-              <td class="p-result__score__table__column">{{ score[0].val }}点</td>
+              <td class="p-result__score__table__column">{{ texts.results?.visualLabel || '視覚' }}:</td>
+              <td class="p-result__score__table__column">{{ score[0].val }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
             <tr>
-              <td class="p-result__score__table__column">聴覚:</td>
-              <td class="p-result__score__table__column">{{ score[1].val }}点</td>
+              <td class="p-result__score__table__column">{{ texts.results?.auditoryLabel || '聴覚' }}:</td>
+              <td class="p-result__score__table__column">{{ score[1].val }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
             <tr>
               <td class="p-result__score__table__column">
-                <span>触覚・<br />運動感覚:&nbsp;</span>
+                <span>{{ texts.results?.tactileLabel || '触覚・運動感覚' }}:&nbsp;</span>
               </td>
-              <td class="p-result__score__table__column">{{ score[2].val }}点</td>
+              <td class="p-result__score__table__column">{{ score[2].val }}{{ texts.results?.pointsSuffix || '点' }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+    <!-- シェアボタン -->
+    <ShareButtons :type="selectedType" :locale="currentLocale" />
+    
     <div class="c-btn__group">
-      <button class="c-btn c-btn--middle c-btn--main" @click="clickRetry">{{ texts.buttons.retry }}</button>
+      <button class="c-btn c-btn--middle c-btn--main" @click="clickRetry">{{ texts.buttons?.retry || '最初からやり直す' }}</button>
     </div>
   </div>
 </template>
@@ -47,7 +50,7 @@
 import { computeTypeId, convertScoreArray } from '../lib/diagnosis'
 import { isDarkPreferred, onThemeChange } from '../lib/theme'
 import assetMapRaw from '../assets/assetMap.js'
-import ja from '../i18n/ja.js'
+import ShareButtons from './ShareButtons.vue'
 
 /**
  * 結果画面コンポーネント
@@ -57,6 +60,9 @@ import ja from '../i18n/ja.js'
  */
 export default {
   name: 'Result',
+  components: {
+    ShareButtons
+  },
   props: {
     // 親コンポーネントから受け取るスコア配列
     score: {
@@ -67,20 +73,26 @@ export default {
     currentTheme: {
       type: String,
       required: true
+    },
+    // 現在の言語
+    currentLocale: {
+      type: String,
+      required: true
+    },
+    // 国際化テキスト
+    texts: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
       // 判定された学習タイプ
       selectedType: 'all',
-      // シェア用の診断結果テキスト
-      shareResult: '',
       // 現在の画像パス
       currentImagePath: '',
       // アセットマップ
       assetMap: assetMapRaw,
-      // 国際化テキスト
-      texts: ja,
       // テーマ変更監視の停止関数
       stopThemeWatch: null
     }
@@ -125,7 +137,6 @@ export default {
     // コンポーネント作成時に学習タイプを判定
     this.determineLearningType()
     this.updateImagePath()
-    this.setupShareResult()
   },
   
   beforeUnmount() {
@@ -170,13 +181,6 @@ export default {
       console.log('[Result] Determined learning type:', this.selectedType)
     },
 
-    /**
-     * シェア用の診断結果を設定
-     */
-    setupShareResult() {
-      this.shareResult = this.texts.resultsLabels[this.selectedType] || '不明'
-      this.$emit('share-diagnosis', this.shareResult)
-    },
 
     /**
      * リトライボタンクリック時の処理

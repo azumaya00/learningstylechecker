@@ -11,16 +11,14 @@
       </transition-group>
     </ul>
     <div class="p-checklist__btn-group">
-      <button class="c-btn c-btn--middle c-btn--accent" @click="addPoint(5)">いつも<br>そうだ</button>
-      <button class="c-btn c-btn--middle c-btn--sub" @click="addPoint(3)">時々<br>そうだ</button>
-      <button class="c-btn c-btn--middle c-btn--main" @click="addPoint(1)">めったに<br>ない</button>
+      <button class="c-btn c-btn--middle c-btn--accent" @click="addPoint(5)">{{ texts.choices?.always || 'いつもそうだ' }}</button>
+      <button class="c-btn c-btn--middle c-btn--sub" @click="addPoint(3)">{{ texts.choices?.sometimes || '時々そうだ' }}</button>
+      <button class="c-btn c-btn--middle c-btn--main" @click="addPoint(1)">{{ texts.choices?.rarely || 'めったにない' }}</button>
     </div>
   </div>
 </template>
 
 <script>
-import ja from '../i18n/ja.js'
-
 /**
  * チェックリスト画面コンポーネント
  * 24問の質問を順次表示し、ユーザーの回答に基づいてスコアを計算
@@ -28,6 +26,18 @@ import ja from '../i18n/ja.js'
  */
 export default {
   name: 'Checklist',
+  props: {
+    // 現在の言語
+    currentLocale: {
+      type: String,
+      required: true
+    },
+    // 国際化テキスト
+    texts: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       // 現在の質問番号（1-24）
@@ -38,13 +48,8 @@ export default {
         { type: 'auditory', val: 0 },    // 聴覚学習
         { type: 'tactile', val: 0 }      // 触覚・運動感覚学習
       ],
-      // 国際化テキスト
-      texts: ja,
       // 診断用の質問リスト（i18nから取得）
-      questions: ja.questions.map((text, index) => ({
-        id: index + 1,
-        text: text
-      })),
+      questions: [],
       // ランダム化された質問順序
       shuffledQuestions: []
     }
@@ -61,10 +66,30 @@ export default {
     }
   },
   created() {
+    // 質問リストを初期化
+    this.initializeQuestions()
     // コンポーネント作成時に質問をランダム化
     this.shuffleQuestions()
   },
+  watch: {
+    // 言語が変更されたときに質問リストを更新
+    texts() {
+      this.initializeQuestions()
+      this.shuffleQuestions()
+    }
+  },
   methods: {
+    /**
+     * 質問リストを初期化
+     * 現在の言語のテキストから質問リストを作成
+     */
+    initializeQuestions() {
+      this.questions = this.texts.questions.map((text, index) => ({
+        id: index + 1,
+        text: text
+      }))
+    },
+
     /**
      * 質問をランダム化する
      * 24個全ての質問をランダムに並び替える（Fisher-Yatesシャッフル）

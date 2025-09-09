@@ -1,25 +1,30 @@
 <template>
   <div class="p-start">
-    <h1 class="p-start__title">{{ texts.app.title }}</h1>
-    <p class="p-start__subtitle">{{ texts.app.subtitle }}</p>
+    <h1 class="p-start__title">{{ texts.app?.title || 'Learning Style Checker' }}</h1>
+    <p class="p-start__subtitle">{{ texts.app?.subtitle || 'あなたの学習スタイルはどのタイプ？' }}</p>
     <button class="c-btn c-btn--large c-btn--main" @click="handleStartClick">
-      {{ texts.app.startCta }}
+      {{ texts.app?.startCta || '診断をはじめる' }}
     </button>
   </div>
 </template>
 
 <script>
-import ja from '../i18n/ja.js'
-
 /**
  * スタート画面コンポーネント
  * アプリケーションの最初の画面を表示し、診断開始のトリガーを提供
  */
 export default {
   name: 'Start',
-  data() {
-    return {
-      texts: ja
+  props: {
+    // 現在の言語
+    currentLocale: {
+      type: String,
+      required: true
+    },
+    // 国際化テキスト
+    texts: {
+      type: Object,
+      required: true
     }
   },
   methods: {
