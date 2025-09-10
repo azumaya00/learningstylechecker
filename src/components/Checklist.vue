@@ -11,33 +11,35 @@
       </span>
     </div>
     
-    <ul class="p-checklist__list" role="group" aria-labelledby="question-title">
-      <transition-group appear mode="in-out" name="question" tag="ul">
-        <li v-for="(question, index) in filteredItems" :key="question.id" class="p-checklist__list__item">
-          <h1 id="question-title" class="p-checklist__title text-2xl md:text-3xl font-extrabold tracking-wide">Q{{ currentQuestion }}.</h1>
-          <div class="p-checklist__question">
-            <p v-html="question.text" class="p-checklist__question__text leading-relaxed tracking-wide text-base-content/90"></p>
-          </div>
-        </li>
-      </transition-group>
-    </ul>
+    <div class="p-checklist__question-container">
+      <ul class="p-checklist__list" role="group" aria-labelledby="question-title">
+        <transition appear mode="out-in" name="question">
+          <li :key="currentQuestion" class="p-checklist__list__item">
+            <h1 id="question-title" class="p-checklist__title text-2xl md:text-3xl font-extrabold tracking-wide">Q{{ currentQuestion }}.</h1>
+            <div class="p-checklist__question">
+              <p v-html="currentQuestionText" class="p-checklist__question__text leading-relaxed tracking-wide text-base-content/90"></p>
+            </div>
+          </li>
+        </transition>
+      </ul>
+    </div>
     <div class="p-checklist__btn-group" role="group" aria-label="回答選択">
       <button 
-        class="c-btn c-btn--middle c-btn--accent focus-visible:outline-2 focus-visible:outline-offset-2 hover:scale-105 transition-transform duration-200 motion-reduce:transition-none" 
+        class="c-btn c-btn--middle c-btn--accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:scale-105 transition-transform duration-200 motion-reduce:transition-none" 
         @click="addPoint(5)"
         @keydown.enter.stop.prevent="addPoint(5)"
         @keydown.space.stop.prevent="addPoint(5)"
         :aria-pressed="selectedValue === 5"
       >{{ texts.choices?.always || 'いつもそうだ' }}</button>
       <button 
-        class="c-btn c-btn--middle c-btn--sub focus-visible:outline-2 focus-visible:outline-offset-2 hover:scale-105 transition-transform duration-200 motion-reduce:transition-none" 
+        class="c-btn c-btn--middle c-btn--sub focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:scale-105 transition-transform duration-200 motion-reduce:transition-none" 
         @click="addPoint(3)"
         @keydown.enter.stop.prevent="addPoint(3)"
         @keydown.space.stop.prevent="addPoint(3)"
         :aria-pressed="selectedValue === 3"
       >{{ texts.choices?.sometimes || '時々そうだ' }}</button>
       <button 
-        class="c-btn c-btn--middle c-btn--main focus-visible:outline-2 focus-visible:outline-offset-2 hover:scale-105 transition-transform duration-200 motion-reduce:transition-none" 
+        class="c-btn c-btn--middle c-btn--main focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary hover:scale-105 transition-transform duration-200 motion-reduce:transition-none" 
         @click="addPoint(1)"
         @keydown.enter.stop.prevent="addPoint(1)"
         @keydown.space.stop.prevent="addPoint(1)"
@@ -54,7 +56,12 @@
       
       <!-- 進捗バー -->
       <div class="w-full h-2 rounded-full overflow-hidden relative" 
-           style="background-color: var(--c-border, #E2E8F0); height: 8px; margin-bottom: 24px;">
+           style="background-color: var(--c-border, #E2E8F0); height: 8px; margin-bottom: 24px;"
+           role="progressbar" 
+           :aria-valuenow="currentQuestion - 1" 
+           :aria-valuemin="0" 
+           :aria-valuemax="questions.length"
+           :aria-label="`進捗: ${currentQuestion - 1}/${questions.length}`">
         <div 
           class="progress-bar-fill transition-[width] duration-500 ease-out motion-reduce:transition-none"
           :style="{ 
@@ -153,6 +160,12 @@ const t = (key: string) => {
   }
   return value || key
 }
+
+// 現在の質問テキストを取得
+const currentQuestionText = computed(() => {
+  const question = questions.find(q => q.id === currentQuestion.value - 1)
+  return question?.text || ''
+})
 
 // 質問データを構築
 const questions = buildQuestions(t)
@@ -284,3 +297,65 @@ defineExpose({
   resetScores
 })
 </script>
+
+<style scoped>
+/* 質問切替アニメーション（位置固定でフェード） */
+.question-enter-active {
+  transition: opacity 0.25s ease-in-out;
+}
+
+.question-leave-active {
+  transition: opacity 0.15s ease-in-out;
+}
+
+.question-enter-from {
+  opacity: 0;
+}
+
+.question-leave-to {
+  opacity: 0;
+}
+
+/* 位置ずれを防ぐための固定 */
+.question-enter-active,
+.question-leave-active,
+.question-enter-from,
+.question-leave-to {
+  position: relative;
+  transform: none !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+}
+
+/* レイアウト安定化 */
+.p-checklist__question-container {
+  min-height: 200px; /* 質問エリアの最小高さを確保 */
+  position: relative;
+}
+
+.p-checklist__list {
+  position: relative;
+  width: 100%;
+}
+
+.p-checklist__list__item {
+  position: relative;
+  width: 100%;
+}
+
+.p-checklist__btn-group {
+  position: relative;
+  z-index: 10; /* 選択肢を前面に固定 */
+  margin-top: 24px; /* 質問との間隔を復活 */
+}
+
+/* PRM対応: reduce ならアニメーション無効 */
+@media (prefers-reduced-motion: reduce) {
+  .question-enter-active,
+  .question-leave-active {
+    transition: none !important;
+  }
+}
+</style>

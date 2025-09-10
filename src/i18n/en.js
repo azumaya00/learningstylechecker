@@ -124,5 +124,16 @@ export default {
     },
     "progress": {
         "label": "Progress"
+    },
+    "alt": {
+        "resultImage": {
+            "v": "Visual type character image",
+            "a": "Auditory type character image",
+            "t": "Tactile type character image",
+            "va": "Visual & Auditory type character image",
+            "vt": "Visual & Tactile type character image",
+            "at": "Auditory & Tactile type character image",
+            "all": "Balanced type character image"
+        }
     }
 }
