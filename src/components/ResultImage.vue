@@ -24,3 +24,5 @@ const { t } = useI18n()
 const src = computed(() => `/images/characters/${props.resultKey}.webp`)
 const alt = computed(() => t(`alt.resultImage.${props.resultKey}`))
 </script>
+
+

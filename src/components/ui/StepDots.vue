@@ -34,3 +34,5 @@ const dots = indices(props.total, max);
     />
   </div>
 </template>
+
+

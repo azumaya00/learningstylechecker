@@ -1,31 +1,30 @@
 export default {
   "v": {
-    "light": "/images/result-v-light.svg",
-    "dark": "/images/result-v-dark.svg"
+    "light": "/images/result-v-light.png",
+    "dark": "/images/result-v-dark.png"
   },
   "a": {
-    "light": "/images/result-a-light.svg",
-    "dark": "/images/result-a-dark.svg"
+    "light": "/images/result-a-light.png",
+    "dark": "/images/result-a-dark.png"
   },
   "t": {
-    "light": "/images/result-t-light.svg",
-    "dark": "/images/result-t-dark.svg"
+    "light": "/images/result-t-light.png",
+    "dark": "/images/result-t-dark.png"
   },
   "va": {
-    "light": "/images/result-va-light.svg",
-    "dark": "/images/result-va-dark.svg"
+    "light": "/images/result-va-light.png",
+    "dark": "/images/result-va-dark.png"
   },
   "vt": {
-    "light": "/images/result-vt-light.svg",
-    "dark": "/images/result-vt-dark.svg"
+    "light": "/images/result-vt-light.png",
+    "dark": "/images/result-vt-dark.png"
   },
   "at": {
-    "light": "/images/result-at-light.svg",
-    "dark": "/images/result-at-dark.svg"
+    "light": "/images/result-at-light.png",
+    "dark": "/images/result-at-dark.png"
   },
   "all": {
-    "light": "/images/result-all-light.svg",
-    "dark": "/images/result-all-dark.svg"
+    "light": "/images/result-all-light.png",
+    "dark": "/images/result-all-dark.png"
   }
 }
-
