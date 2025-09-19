@@ -163,7 +163,8 @@ const t = (key: string) => {
 
 // 現在の質問テキストを取得
 const currentQuestionText = computed(() => {
-  const question = questions.find(q => q.id === currentQuestion.value - 1)
+  const index = currentQuestion.value - 1
+  const question = shuffledQuestions.value[index] ?? questions[index]
   return question?.text || ''
 })
 
@@ -248,7 +249,7 @@ function addPoint(point: number) {
   
   // 現在の質問の元のIDを取得（0-23のインデックス）
   const currentQuestionData = shuffledQuestions.value[currentQuestion.value - 1]
-  const originalId = currentQuestionData.id - 1 // 1-24から0-23に変換
+  const originalId = currentQuestionData.id
   
   // coreライブラリのsetAnswerを使用
   setAnswer(originalId, point)
