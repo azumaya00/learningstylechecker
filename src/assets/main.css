@@ -1,6 +1,28 @@
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .pt-safe {
+    padding-top: var(--sat);
+  }
+
+  .pb-safe {
+    padding-bottom: var(--sab);
+  }
+
+  .px-safe {
+    padding-left: var(--sal);
+    padding-right: var(--sar);
+  }
+}
 
 /* prefers-reduced-motion 対応（アニメ最小化） */
 @media (prefers-reduced-motion: reduce) {

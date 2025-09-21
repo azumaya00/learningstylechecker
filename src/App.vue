@@ -101,6 +101,7 @@ import Result from './components/Result.vue'
 import { useTheme } from './composables/useTheme'
 import { getCurrentLocale, setLocale, AVAILABLE_LOCALES } from './lib/locale'
 import { getTexts } from './lib/i18n'
+import { applyOg } from './utils/seo'
 // useLocale は Composition API のコンポーザブルのため、Options API では使用しない
 // VueのOptions APIでは型定義が制限されるため、any型を使用
 
@@ -178,6 +179,7 @@ export default {
     this.initializeApp()
     // テーマを再適用（DOMが準備できた後）
     this.loadInitialTheme()
+    this.applyDefaultOg()
     // 少し遅延してテーマを再適用（確実にするため）
     this.$nextTick(() => {
       this.loadInitialTheme()
@@ -280,6 +282,21 @@ export default {
       this.currentLocale = locale
       this.texts = getTexts(locale)
       setLocale(locale)
+      if (this.currentPage === 'Start') {
+        this.$nextTick(() => this.applyDefaultOg())
+      }
+    },
+
+    applyDefaultOg() {
+      const title = this.texts?.app?.title || 'Learning Style Checker'
+      const description = this.texts?.app?.subtitle || ''
+      const origin = window.location.origin
+      applyOg({
+        title,
+        description,
+        url: origin + '/',
+        image: origin + '/og/og-all.png'
+      })
     },
 
 
@@ -318,6 +335,7 @@ export default {
       window.scrollTo({ top: 0, behavior: 'smooth' })
       // 背景をリセット
       document.documentElement.style.backgroundImage = ''
+      this.$nextTick(() => this.applyDefaultOg())
     },
 
   }

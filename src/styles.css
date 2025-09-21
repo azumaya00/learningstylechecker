@@ -310,6 +310,13 @@ button:focus-visible {
   margin-top: 0;
 }
 
+@media (max-width: 767px) {
+  .l-main {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-2);
+  }
+}
+
 .l-main__inner {
   width: 100%;
   max-width: 42rem;
@@ -335,6 +342,12 @@ button:focus-visible {
   -webkit-backdrop-filter: none;
   padding: 0;
   max-width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.l-main__inner--start > * {
+  flex: 1 1 auto;
 }
 
 @media (min-width: 768px) {
@@ -434,7 +447,7 @@ l-footer
 .c-btn__group {
   width: 100%;
   max-width: 42rem;
-  margin: var(--space-10) auto 0;
+  margin: var(--space-10) auto var(--space-8);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -445,8 +458,9 @@ l-footer
 @media (max-width: 767px) {
   .c-btn__group {
     flex-direction: column;
-    margin-top: var(--space-6);
-    gap: var(--space-3);
+    margin-top: var(--space-10);
+    margin-bottom: var(--space-8);
+    gap: var(--space-2);
   }
 }
 
@@ -624,8 +638,6 @@ l-footer
   background: transparent;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
-  /* モバイル: 1080x1920 のアスペクト比 (9:16) */
-  aspect-ratio: 9 / 16;
   max-width: 100%;
   width: 100%;
 }
@@ -669,7 +681,7 @@ l-footer
    ======================================== */
 .result-hero {
   width: 100%;
-  max-width: 400px;
+  max-width: 100%;
   margin: 0 auto var(--space-6);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -805,44 +817,97 @@ l-footer
    Page Components (Legacy Classes - Updated)
    ======================================== */
 .p-start {
-  padding: var(--space-12) var(--space-6) var(--space-8);
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 100%;
+  padding: calc(20px + var(--sat)) clamp(var(--space-4), 4vw, var(--space-6)) calc(20px + var(--sab));
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+  gap: var(--space-1);
   align-items: center;
-  min-height: 100%;
+}
+
+.p-start__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+  margin-top: 20px;
 }
 
 .p-start__title {
-  margin-bottom: var(--space-6);
   font-size: var(--fs-title);
   line-height: var(--lh-tight);
   color: var(--card-hero-foreground, var(--c-primary));
   text-shadow: var(--card-hero-title-shadow, none);
+
 }
 
 .p-start__subtitle {
-  margin-bottom: var(--space-12);
   font-size: var(--fs-2xl);
   color: var(--card-hero-subtitle, var(--c-text-muted));
   line-height: var(--lh-relaxed);
+  margin-bottom: var(--space-1);
 }
 
-@media (min-width: 768px) {
-  .p-start {
-    padding: var(--space-16) var(--space-8) var(--space-12);
-  }
-  
-  .p-checklist {
-    padding: var(--space-12) var(--space-8) var(--space-8);
+.p-start__spacer {
+  width: clamp(200px, 52vw, 290px);
+  min-height: clamp(140px, 30vh, 240px);
+  max-height: clamp(200px, 36vh, 260px);
+  aspect-ratio: 9 / 16;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-block: var(--space-1);
+  flex: 1 1 auto;
+}
+
+.p-start__cta {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: var(--space-1);
+  margin-bottom: 20px;
+}
+
+@media (max-width: 767px) {
+  .p-start__cta .c-btn {
+    width: clamp(200px, 70vw, 320px);
   }
 }
 
 @media (max-width: 767px) {
   .p-start__subtitle {
     font-size: var(--fs-xl);
-    margin-bottom: var(--space-10);
+  }
+}
+
+@media (min-width: 768px) {
+  .p-start {
+    min-height: 100%;
+    padding: var(--space-16) var(--space-8) var(--space-12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-8);
+  }
+
+  .p-start__header {
+    align-items: center;
+    text-align: center;
+    max-width: 520px;
+  }
+
+  .p-start__spacer {
+    display: none;
+  }
+
+  .p-checklist {
+    padding: var(--space-12) var(--space-8) var(--space-8);
   }
 }
 
@@ -964,6 +1029,10 @@ l-footer
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+}
+
+.p-result__container > * {
+  width: 100%;
 }
 
 .p-result__diagnosis {
