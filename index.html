@@ -2,32 +2,45 @@
 <html lang="ja" data-theme="ls-light">
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-63387812-1"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-63387812-1"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'UA-63387812-1');
+      gtag("config", "UA-63387812-1");
     </script>
 
     <script>
       (function () {
         try {
-          var saved = localStorage.getItem('ls_theme');
-          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          var theme = saved === 'ls-dark' || saved === 'ls-light'
-            ? saved
-            : (prefersDark ? 'ls-dark' : 'ls-light');
-          document.documentElement.setAttribute('data-theme', theme);
+          var saved = localStorage.getItem("ls_theme");
+          var prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var theme =
+            saved === "ls-dark" || saved === "ls-light"
+              ? saved
+              : prefersDark
+              ? "ls-dark"
+              : "ls-light";
+          document.documentElement.setAttribute("data-theme", theme);
         } catch (error) {
-          document.documentElement.setAttribute('data-theme', 'ls-light');
+          document.documentElement.setAttribute("data-theme", "ls-light");
         }
       })();
     </script>
 
     <!-- font awesome -->
-    <script src="https://kit.fontawesome.com/83de085ebe.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/83de085ebe.js"
+      crossorigin="anonymous"
+    ></script>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,41 +52,41 @@
       rel="stylesheet"
     />
 
-    <!-- FB用ここから -->
+    <!-- Open Graph -->
     <meta property="og:locale" content="ja_JP" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="ゆるナレッジfromマレーシア" />
-    <meta
-      property="og:title"
-      content="学習スタイル診断"
-    />
-    <meta property="og:url" content="https://learntypecheck.yuruknowledge.com/" />
+    <meta property="og:site_name" content="Yuruknowledge Labo" />
+    <meta property="og:title" content="Learning Style Checker" />
     <meta
       property="og:description"
-      content="あなたの学習スタイルを3タイプから診断"
+      content="あなたの学習スタイルはどのタイプ？質問に答えるだけで簡単にチェックできます！"
     />
-    <meta
-      property="og:image"
-      content="/og/og-all.png"
-    />
-    <!-- FB用ここまで -->
+    <meta property="og:url" content="%VITE_SITE_ORIGIN%/" />
+    <meta property="og:image" content="%VITE_SITE_ORIGIN%/og/og-all.png" />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="720" />
 
-    <!-- twitter用ここから -->
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@saika00" />
-    <meta
-      name="twitter:title"
-      content="学習スタイル診断"
-    />
+    <meta name="twitter:title" content="Learning Style Checker" />
     <meta
       name="twitter:description"
-      content="あなたの学習スタイルを3タイプから診断"
+      content="あなたの学習スタイルはどのタイプ？質問に答えるだけで簡単にチェックできます！"
     />
-    <meta
-      name="twitter:image"
-      content="/og/og-all.png"
-    />
-    <!-- twitter用ここまで -->
+    <meta name="twitter:image" content="%VITE_SITE_ORIGIN%/og/og-all.png" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="%VITE_SITE_ORIGIN%/" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="%VITE_SITE_ORIGIN%/" />
+    <!-- pwa用ここから -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <!-- pwa用ここまで -->
   </head>
 
   <body>

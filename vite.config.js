@@ -21,8 +21,11 @@ export default defineConfig({
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' }
         ]
       },
-      workbox: { 
-        navigateFallback: '/' 
+      workbox: {
+        navigateFallback: '/index.html',
+        runtimeCaching: [
+          { urlPattern: /\/share\/.*\.html$/i, handler: 'NetworkOnly' }
+        ]
       }
     })
   ],
