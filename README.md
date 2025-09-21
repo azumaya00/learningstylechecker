@@ -44,6 +44,25 @@ X / LINE / WhatsApp / Facebook / Copy Link の5つのシェア機能とOGP対応
 ### Phase 6: UI/UX改善・PWA対応完了
 Tailwind CSS + DaisyUI導入、進捗UI改善、A11y仕上げ、PWA対応を実装。
 
+### Phase 7: PWA/OGP 本番対応（2025-09-21）
+- **PWA有効化**
+  - `vite-plugin-pwa` を導入し、Service Worker を本番で登録
+  - `main.js` に `registerSW` を追加し、自動更新・オフライン対応を確認
+  - manifest とアイコン（192px/512px）を設定
+  - 本番デプロイ後、インストールボタン表示とオフラインでトップページ表示を確認済み
+
+- **OGP調整**
+  - `index.html` の OGP/Twitter メタタグを `%VITE_SITE_ORIGIN%` を用いた絶対URLに修正
+  - 共通 OGP: `/og/og-all.png` を使用
+  - 結果タイプ別 OGP: `/public/share/*.html` を本番URLへ置換して生成
+  - 各タイプでシェア時に正しいサムネイルが表示されることを確認
+
+- **Vercel デプロイ**
+  - 本番URL: [https://learningstylechecker.vercel.app](https://learningstylechecker.vercel.app)
+  - `VITE_SITE_ORIGIN` を環境変数に設定し、本番ビルドで反映
+  - master マージにより自動デプロイ → 正常に公開完了
+
+
 ## 実装ハイライト
 
 ### Tailwind CSS + DaisyUI
