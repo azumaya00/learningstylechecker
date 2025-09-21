@@ -94,20 +94,20 @@ export default {
     },
     "labels": {
         "type": {
-            "v": "Visual",
-            "a": "Auditory", 
-            "t": "Tactile",
-            "va": "Visual-Auditory",
-            "vt": "Visual-Tactile",
-            "at": "Auditory-Tactile",
-            "all": "Balanced"
+            "v": "Visual type",
+            "a": "Auditory type", 
+            "t": "Tactile / Kinesthetic type",
+            "va": "Visual & Auditory type",
+            "vt": "Visual & Tactile / Kinesthetic type",
+            "at": "Auditory & Tactile / Kinesthetic type",
+            "all": "Balanced type"
         }
     },
     "share": {
         "message": {
-            "base": "My learning style is \"%TYPE%\"! Why don't you try the diagnosis too?"
+            "base": "My learning style was \"%TYPE%\"! Try the Learning Style Checker too!"
         },
-        "tags": "#learningstyle #diagnosis #education",
+        "tags": "#LeaningStyleChecker #StudyTips #SelfDiscovery",
         "cta": {
             "x": "Share on X",
             "line": "Share on LINE",

@@ -55,3 +55,4 @@ export function getCurrentImagePath(type, theme) {
 }
 
 
+

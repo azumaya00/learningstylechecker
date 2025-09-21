@@ -1,6 +1,22 @@
 type ResultType = 'v'|'a'|'t'|'va'|'vt'|'at'|'all'
 
 export function useShare(t: (key: string) => string, locale: string) {
+  const defaultOrigin = (typeof window !== 'undefined' && window.location?.origin)
+    ? window.location.origin
+    : ''
+  const baseOrigin = (import.meta.env?.VITE_SITE_ORIGIN as string | undefined) || defaultOrigin
+
+  function shareLandingUrl(type: ResultType, channel: string) {
+    const normalizedOrigin = baseOrigin.replace(/\/$/, '')
+    const url = new URL(`${normalizedOrigin}/share/${type}.html`)
+    if (locale === 'en') {
+      url.searchParams.set('lang', locale)
+    }
+    url.searchParams.set('utm_source', channel)
+    url.searchParams.set('utm_medium', 'share')
+    url.searchParams.set('utm_campaign', 'learningstyle')
+    return url
+  }
 
   function typeLabel(type: ResultType) {
     return t(`labels.type.${type}`)
@@ -11,43 +27,34 @@ export function useShare(t: (key: string) => string, locale: string) {
     return base.replace('%TYPE%', typeLabel(type))
   }
 
-  function appUrlWithParams(channel: string) {
-    const url = new URL(location.origin + '/')
-    url.searchParams.set('lang', String(locale))
-    url.searchParams.set('utm_source', channel)
-    url.searchParams.set('utm_medium', 'share')
-    url.searchParams.set('utm_campaign', 'learningstyle')
-    return url
-  }
-
   function shareUrl(channel: 'x'|'line'|'wa'|'fb', type: ResultType) {
-    const appUrl = appUrlWithParams(channel)
+    const landingUrl = shareLandingUrl(type, channel)
 
     if (channel === 'x') {
       const u = new URL('https://twitter.com/intent/tweet')
       u.searchParams.set('text', shareText(type))
-      u.searchParams.set('url', appUrl.toString())
+      u.searchParams.set('url', landingUrl.toString())
       const tags = t('share.tags').replace(/#/g,'').split(/\s+/).filter(Boolean).join(',')
       if (tags) u.searchParams.set('hashtags', tags)
       return u.toString()
     }
     if (channel === 'line') {
       const u = new URL('https://social-plugins.line.me/lineit/share')
-      u.searchParams.set('url', appUrl.toString())
+      u.searchParams.set('url', landingUrl.toString())
       return u.toString()
     }
     if (channel === 'wa') {
       const u = new URL('https://api.whatsapp.com/send')
-      u.searchParams.set('text', `${shareText(type)} ${appUrl.toString()}`)
+      u.searchParams.set('text', `${shareText(type)} ${landingUrl.toString()}`)
       return u.toString()
     }
     const u = new URL('https://www.facebook.com/sharer/sharer.php')
-    u.searchParams.set('u', appUrl.toString())
+    u.searchParams.set('u', landingUrl.toString())
     return u.toString()
   }
 
   async function shareNative(type: ResultType) {
-    const url = appUrlWithParams('webshare').toString()
+    const url = shareLandingUrl(type, 'webshare').toString()
     const text = shareText(type)
     try {
       if (navigator.share) {
@@ -58,8 +65,8 @@ export function useShare(t: (key: string) => string, locale: string) {
     return false
   }
 
-  function copyLink() {
-    const url = appUrlWithParams('copy').toString()
+  function copyLink(type: ResultType) {
+    const url = shareLandingUrl(type, 'copy').toString()
     return navigator.clipboard?.writeText(url)
   }
 

@@ -27,3 +27,4 @@ const alt = computed(() => t(`alt.resultImage.${props.resultKey}`))
 
 
 
+

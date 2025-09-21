@@ -22,7 +22,7 @@ function html(type) {
   const title = '学習スタイル診断'
   const desc = `あなたの学習タイプは「${LABEL_JA[type]}タイプ」でした！`
   const url = `${ORIGIN}/share/${type}.html`
-  const image = `${ORIGIN}/images/result-${type}-light.svg`
+  const image = `${ORIGIN}/images/result-${type}-light.png`
   const redirect = `${ORIGIN}${START_PATH}`
 
   return `<!doctype html>

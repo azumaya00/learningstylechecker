@@ -49,6 +49,8 @@
 
 <script>
 import { useShare } from '../utils/share'
+import ja from '../i18n/ja.js'
+import en from '../i18n/en.js'
 
 /**
  * シェアボタンコンポーネント
@@ -75,29 +77,39 @@ export default {
     }
   },
   setup(props) {
-    // より完全なフォールバック関数
-    const t = (key) => {
-      const fallbacks = {
-        'share.cta.x': 'X',
-        'share.cta.line': 'LINE',
-        'share.cta.wa': 'WhatsApp',
-        'share.cta.fb': 'Facebook',
-        'share.cta.copy': 'コピー',
-        'share.message.base': '私の学習スタイルは「%TYPE%」でした！あなたも診断してみませんか？',
-        'share.tags': '#学習スタイル診断 #勉強法 #自己分析',
-        'labels.type.v': '視覚型',
-        'labels.type.a': '聴覚型',
-        'labels.type.t': '触覚型',
-        'labels.type.va': '視覚・聴覚型',
-        'labels.type.vt': '視覚・触覚型',
-        'labels.type.at': '聴覚・触覚型',
-        'labels.type.all': 'バランス型',
-        'app.title': '学習スタイル診断'
+    const fallbacks = {
+      'share.cta.x': 'X',
+      'share.cta.line': 'LINE',
+      'share.cta.wa': 'WhatsApp',
+      'share.cta.fb': 'Facebook',
+      'share.cta.copy': 'コピー',
+      'share.message.base': '私の学習スタイルは「%TYPE%」でした！あなたも診断してみませんか？',
+      'share.tags': '#LeaningStyleChecker #勉強法 #自己分析',
+      'labels.type.v': '視覚型',
+      'labels.type.a': '聴覚型',
+      'labels.type.t': '触覚型',
+      'labels.type.va': '視覚・聴覚型',
+      'labels.type.vt': '視覚・触覚型',
+      'labels.type.at': '聴覚・触覚型',
+      'labels.type.all': 'バランス型',
+      'app.title': '学習スタイル診断'
+    }
+
+    const messagesByLocale = {
+      ja,
+      en
+    }
+
+    const translate = (key) => {
+      const targetLocale = messagesByLocale[props.locale] || messagesByLocale.ja
+      const value = key.split('.').reduce((acc, segment) => (acc && acc[segment] !== undefined) ? acc[segment] : undefined, targetLocale)
+      if (typeof value === 'string') {
+        return value
       }
       return fallbacks[key] || key
     }
-    
-    const { shareUrl, copyLink: copyLinkUtil } = useShare(t, props.locale)
+
+    const { shareUrl, copyLink: copyLinkUtil } = useShare(translate, props.locale)
     
     return {
       shareUrl,
@@ -138,7 +150,7 @@ export default {
      */
     async copyLink() {
       try {
-        await this.copyLinkUtil()
+        await this.copyLinkUtil(this.type)
         alert('リンクをコピーしました！')
       } catch (error) {
         alert('コピーに失敗しました。手動でコピーしてください。')
