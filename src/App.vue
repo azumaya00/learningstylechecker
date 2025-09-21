@@ -43,7 +43,7 @@
         <div :class="['l-main__inner', { 'l-main__inner--start': currentPage === 'Start' }]">
           
           <transition mode="out-in">
-            <div :class="{ 'card--hero': currentPage === 'Start' }">
+            <div :class="cardWrapperClasses" :style="cardWrapperStyle">
               <component
                 :is="currentPage"
                 :result="diagnosisResult"
@@ -142,6 +142,30 @@ export default {
      */
     currentYear() {
       return new Date().getFullYear()
+    },
+
+    cardWrapperClasses() {
+      if (this.currentPage !== 'Start') {
+        return []
+      }
+
+      return ['card--hero']
+    },
+
+    cardWrapperStyle() {
+      if (this.currentPage !== 'Start') {
+        return {}
+      }
+
+      const isDark = this.currentTheme === 'ls-dark'
+      return {
+        '--card-hero-mobile': `url('/images/start-card-mobile-${isDark ? 'dark' : 'light'}.png')`,
+        '--card-hero-desktop': `url('/images/start-card-desktop-${isDark ? 'dark' : 'light'}.png')`,
+        '--card-hero-foreground': isDark ? 'hsl(188deg 72% 76%)' : 'hsl(188deg 62% 32%)',
+        '--card-hero-text-shadow': isDark ? '0 3px 8px rgba(15, 23, 42, 0.55)' : '0 1px 2px rgba(255, 255, 255, 0.45)',
+        '--card-hero-title-shadow': isDark ? '0 6px 16px rgba(15, 23, 42, 0.62)' : '0 1px 3px rgba(255, 255, 255, 0.4)',
+        '--card-hero-subtitle': isDark ? 'rgba(248, 250, 252, 0.92)' : 'rgba(71, 79, 88, 0.9)'
+      }
     }
   },
   created() {
@@ -215,6 +239,10 @@ export default {
     applyThemeColors(theme) {
       const root = document.documentElement
       
+      // Startカード用のCSS変数はコンポーネント側で制御するため、ここではリセットのみ
+      root.style.removeProperty('--card-hero-mobile')
+      root.style.removeProperty('--card-hero-desktop')
+
       if (theme === 'ls-light') {
         // ライトモード：既存のCSS変数をクリア（デフォルト値を使用）
         root.style.removeProperty('--c-bg')

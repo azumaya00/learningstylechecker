@@ -102,10 +102,6 @@ table {
   /* === Background Images === */
   /* 背景画像は削除 - シンプルな背景色のみ使用 */
 
-  /* === Card Hero Background Images === */
-  --card-hero-mobile: url('/images/start-card-mobile-light.svg');
-  --card-hero-desktop: url('/images/start-card-desktop-light.svg');
-
   /* === Color Palette - Legacy Light Theme === */
   --c-bg: #f8f9fa;                    /* 背景色 */
   --c-card: rgba(255, 255, 255, 0.85); /* カード背景 */
@@ -126,7 +122,9 @@ table {
 /* ========================================
    Dark Theme Color Palette
    ======================================== */
-:root[data-theme="legacy-dark"] {
+:root[data-theme="legacy-dark"],
+:root[data-theme="ls-dark"],
+:root.theme-ls-dark {
   --c-bg: #1a1a1a;                    /* ダーク背景色 */
   --c-card: rgba(30, 30, 30, 0.9);    /* ダークカード背景 */
   --c-text: #e5e7eb;                  /* ダークテキスト */
@@ -141,10 +139,6 @@ table {
   --c-success: #34d399;               /* ダーク成功色 */
   --c-warning: #fbbf24;               /* ダーク警告色 */
   --c-error: #f87171;                 /* ダークエラー色 */
-  
-  /* === Card Hero Background Images (Dark Theme) === */
-  --card-hero-mobile: url('/images/start-card-mobile-dark.svg');
-  --card-hero-desktop: url('/images/start-card-desktop-dark.svg');
 }
 
 /* ========================================
@@ -250,7 +244,6 @@ button:focus-visible {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding-bottom: 80px; /* フッターの高さ分のパディング */
 }
 
 .page__bg {
@@ -306,12 +299,15 @@ button:focus-visible {
 .l-main {
   display: flex;
   flex-direction: column;
-  min-height: 100svh;
+  flex: 1 0 auto;
+  min-height: 0;
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-4);
 }
 
 .l-main__container {
   width: 100%;
-  margin-top: var(--space-12);
+  margin-top: 0;
 }
 
 .l-main__inner {
@@ -342,6 +338,11 @@ button:focus-visible {
 }
 
 @media (min-width: 768px) {
+  .l-main {
+    padding-top: calc(var(--space-20) + 40px);
+    padding-bottom: var(--space-6);
+  }
+
   .l-main__inner {
     padding: var(--space-8);
     min-height: 600px;
@@ -620,7 +621,7 @@ l-footer
 .card--hero {
   position: relative;
   overflow: hidden;
-  background: var(--c-card);
+  background: transparent;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   /* モバイル: 1080x1920 のアスペクト比 (9:16) */
@@ -643,22 +644,11 @@ l-footer
   z-index: 1;
 }
 
-.card--hero::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 2;
-}
-
 .card--hero > * {
   position: relative;
-  z-index: 3;
-  color: #ffffff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  color: var(--card-hero-foreground, #ffffff);
+  text-shadow: var(--card-hero-text-shadow, none);
 }
 
 @media (min-width: 768px) {
@@ -828,12 +818,14 @@ l-footer
   margin-bottom: var(--space-6);
   font-size: var(--fs-title);
   line-height: var(--lh-tight);
+  color: var(--card-hero-foreground, var(--c-primary));
+  text-shadow: var(--card-hero-title-shadow, none);
 }
 
 .p-start__subtitle {
   margin-bottom: var(--space-12);
   font-size: var(--fs-2xl);
-  color: var(--c-text-muted);
+  color: var(--card-hero-subtitle, var(--c-text-muted));
   line-height: var(--lh-relaxed);
 }
 

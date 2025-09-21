@@ -11,6 +11,21 @@
       gtag('config', 'UA-63387812-1');
     </script>
 
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('ls_theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = saved === 'ls-dark' || saved === 'ls-light'
+            ? saved
+            : (prefersDark ? 'ls-dark' : 'ls-light');
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (error) {
+          document.documentElement.setAttribute('data-theme', 'ls-light');
+        }
+      })();
+    </script>
+
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/83de085ebe.js" crossorigin="anonymous"></script>
 

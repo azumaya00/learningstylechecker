@@ -54,3 +54,4 @@ export function getCurrentImagePath(type, theme) {
   return imageConfig[variant]
 }
 
+
