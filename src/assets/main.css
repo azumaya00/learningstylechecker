@@ -1,0 +1,43 @@
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .pt-safe {
+    padding-top: var(--sat);
+  }
+
+  .pb-safe {
+    padding-bottom: var(--sab);
+  }
+
+  .px-safe {
+    padding-left: var(--sal);
+    padding-right: var(--sar);
+  }
+}
+
+/* prefers-reduced-motion 対応（アニメ最小化） */
+@media (prefers-reduced-motion: reduce) {
+  * { 
+    animation-duration: 0.001ms !important; 
+    animation-iteration-count: 1 !important; 
+    transition-duration: 0.001ms !important; 
+  }
+}
+
+/* 2025年9月トレンド: 淡グラデーション背景（ライト/ダーク両対応） */
+html[data-theme='ls-light'] body {
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(20, 120, 160, 0.03) 100%);
+}
+
+html[data-theme='ls-dark'] body {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.04) 100%);
+}
