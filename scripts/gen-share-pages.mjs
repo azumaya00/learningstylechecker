@@ -27,7 +27,7 @@ const LABEL_JA = {
 function buildMeta(type) {
   const isAll = type === 'all'
   const titleBase = '学習スタイル診断'
-  const title = isAll ? titleBase : `${titleBase} - あなたの学習タイプは「${LABEL_JA[type]}タイプ」でした！`
+  const title = `${titleBase} - あなたの学習タイプは「${LABEL_JA[type]}タイプ」でした！`
   const desc  = isAll
     ? '24問で学習タイプを診断。視覚・聴覚・触覚の傾向と学び方のヒントをチェック。'
     : `あなたの学習タイプは「${LABEL_JA[type]}タイプ」でした！`
