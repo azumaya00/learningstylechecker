@@ -64,7 +64,7 @@
     <footer class="l-footer bg-neutral text-neutral-content py-3 md:py-4">
       <p class="p-footer__text text-xs md:text-sm text-neutral-content">
         &copy;Copyright{{ currentYear }}
-        <a href="https://yuruknowledge.com/" class="p-footer__link">ゆるナレッジfromマレーシア</a>
+        <a href="https://learningstylechecker.vercel.app/" class="p-footer__link">Learning Style Checker</a>
         .All Rights Reserved
       </p>
     </footer>
