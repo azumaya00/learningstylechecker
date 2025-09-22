@@ -7,63 +7,39 @@
 <meta name="description" content="あなたの学習タイプは「聴覚タイプ」でした！">
 
 <!-- Open Graph -->
-<meta property="og:type" content="website">
+<meta property="og:type" content="website" />
 <meta property="og:site_name" content="Learning Style Checker" />
-<meta property="og:title" content="あなたの学習タイプは『聴覚タイプ』でした！" />
-<meta property="og:description" content="24問で学習タイプを診断。視覚・聴覚・触覚の傾向と学び方のヒントをチェック。">
+<meta property="og:title" content="学習スタイル診断 - あなたの学習タイプは「聴覚タイプ」でした！" />
+<meta property="og:description" content="あなたの学習タイプは「聴覚タイプ」でした！">
 <meta property="og:url" content="https://learningstylechecker.vercel.app/share/a.html">
 <meta property="og:image" content="https://learningstylechecker.vercel.app/og/og-a.png?v=20250922a">
+<meta property="og:image:alt" content="聴覚タイプの結果カード画像">
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:locale" content="ja_JP" />
-<meta property="og:image:alt" content="聴覚タイプの結果カード画像">
+
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="あなたの学習タイプは『聴覚タイプ』でした！" />
-<meta name="twitter:description" content="24問で学習タイプを診断。視覚・聴覚・触覚の傾向と学び方のヒントをチェック。">
+<meta name="twitter:title" content="学習スタイル診断 - あなたの学習タイプは「聴覚タイプ」でした！" />
+<meta name="twitter:description" content="あなたの学習タイプは「聴覚タイプ」でした！">
 <meta name="twitter:image" content="https://learningstylechecker.vercel.app/og/og-a.png?v=20250922a">
 <meta name="twitter:image:alt" content="聴覚タイプの結果カード画像">
+
 <link rel="canonical" href="https://learningstylechecker.vercel.app/share/a.html">
 <meta name="robots" content="noindex" />
 <style>
   body { 
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; 
-    display: grid; 
-    place-items: center; 
-    min-height: 100svh; 
-    margin: 0; 
+    display: grid; place-items: center; min-height: 100svh; margin: 0; 
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   }
-  .card { 
-    padding: 32px; 
-    max-width: 720px; 
-    text-align: center; 
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  }
-  h1 {
-    color: #1f2937;
-    font-size: 2rem;
-    margin-bottom: 16px;
-    font-weight: 700;
-  }
-  p {
-    color: #6b7280;
-    margin-bottom: 8px;
-  }
-  .hint { 
-    opacity: 0.7; 
-    font-size: 14px; 
-    margin-top: 16px; 
-  }
-  .hint a {
-    color: #3b82f6;
-    text-decoration: none;
-  }
-  .hint a:hover {
-    text-decoration: underline;
-  }
+  .card { padding: 32px; max-width: 720px; text-align: center; background: white;
+    border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+  h1 { color: #1f2937; font-size: 2rem; margin-bottom: 16px; font-weight: 700; }
+  p { color: #6b7280; margin-bottom: 8px; }
+  .hint { opacity: .7; font-size: 14px; margin-top: 16px; }
+  .hint a { color: #3b82f6; text-decoration: none; }
+  .hint a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -72,16 +48,13 @@
     <p>数秒後に診断スタートページへ移動します。</p>
     <p class="hint"><a href="https://learningstylechecker.vercel.app/">移動しない場合はこちら</a></p>
   </div>
+
+  <!-- 人間だけトップへ自動遷移（BotはJS実行しない） -->
   <script>
     const ua = navigator.userAgent.toLowerCase();
-    const isBot =
-      /bot|facebookexternalhit|twitterbot|slackbot|linkedinbot|pinterest|embedly|quora|vkshare|facebot|ia_archiver/.test(
-        ua
-      );
+    const isBot = /bot|facebookexternalhit|twitterbot|slackbot|linkedinbot|pinterest|embedly|quora|vkshare|facebot|ia_archiver/.test(ua);
     if (!isBot) {
-      setTimeout(() => {
-        location.replace("https://learningstylechecker.vercel.app/");
-      }, 1200); // 1.2秒後にトップへ
+      setTimeout(() => { location.replace('https://learningstylechecker.vercel.app/'); }, 1200);
     }
   </script>
 </body>

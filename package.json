@@ -6,6 +6,8 @@
     "dev": "vite",
     "prebuild": "node scripts/gen-share-pages.mjs",
     "build": "vite build",
+    "prebuild:prod": "cross-env MODE=production node scripts/gen-share-pages.mjs",
+    "build:prod": "npm run prebuild:prod && vite build --mode production",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -18,7 +20,9 @@
     "@tailwindcss/postcss": "^4.1.13",
     "@vitejs/plugin-vue": "^5.0.0",
     "autoprefixer": "^10.4.21",
+    "cross-env": "^10.0.0",
     "daisyui": "^5.1.9",
+    "dotenv": "^17.2.2",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.13",
     "vite": "^5.0.0",
