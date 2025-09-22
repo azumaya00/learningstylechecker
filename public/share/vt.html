@@ -24,7 +24,6 @@
 <meta name="twitter:image" content="https://learningstylechecker.vercel.app/og/og-vt.png?v=20250922a">
 <meta name="twitter:image:alt" content="視覚＆触覚タイプの結果カード画像">
 <link rel="canonical" href="https://learningstylechecker.vercel.app/share/vt.html">
-<meta http-equiv="refresh" content="2; url=https://learningstylechecker.vercel.app/">
 <meta name="robots" content="noindex" />
 <style>
   body { 
@@ -73,5 +72,17 @@
     <p>数秒後に診断スタートページへ移動します。</p>
     <p class="hint"><a href="https://learningstylechecker.vercel.app/">移動しない場合はこちら</a></p>
   </div>
+  <script>
+    const ua = navigator.userAgent.toLowerCase();
+    const isBot =
+      /bot|facebookexternalhit|twitterbot|slackbot|linkedinbot|pinterest|embedly|quora|vkshare|facebot|ia_archiver/.test(
+        ua
+      );
+    if (!isBot) {
+      setTimeout(() => {
+        location.replace("https://learningstylechecker.vercel.app/");
+      }, 1200); // 1.2秒後にトップへ
+    }
+  </script>
 </body>
 </html>
