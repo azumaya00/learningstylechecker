@@ -12,7 +12,7 @@ const LABEL_JA = {
   va: '視覚＆聴覚',
   vt: '視覚＆触覚',
   at: '聴覚＆触覚',
-  all: '全部盛り（ネタ枠）'
+  all: '全部盛り'
 }
 
 const COLORS = {
