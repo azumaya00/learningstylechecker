@@ -52,3 +52,6 @@ jspm_packages/
 
 # Yarn Integrity file
 .yarn-integrity
+
+# セキュリティ監査の記録（公開リポジトリのため Git に載せない）
+SECURITY_AUDIT.md
